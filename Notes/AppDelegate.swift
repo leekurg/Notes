@@ -7,6 +7,8 @@
 
 import UIKit
 
+let database = Database()
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

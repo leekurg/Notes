@@ -9,8 +9,24 @@ import CoreGraphics
 import Foundation
 
 struct NoteDataModel {
+    var id: Int
+    var timestamp: Date
     var title: String?
     var description: String?
     var color: CGColor?
-    var timestamp: Date
+}
+
+extension NoteDataModel {
+    init( object: NoteDataObject ) {
+        id = object.id
+        timestamp = object.timestamp
+        title = object.title
+        description = object.desc
+//        color = object.c
+    }
+    
+    init( id: Int ) {
+        self.id = id
+        timestamp = Date()
+    }
 }
