@@ -14,9 +14,9 @@
             filePath = "Notes/View/NotesCollectionViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "129"
-            endingLineNumber = "129"
-            landmarkName = "reloadData()"
+            startingLineNumber = "142"
+            endingLineNumber = "142"
+            landmarkName = "handleLongPress(gesture:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
