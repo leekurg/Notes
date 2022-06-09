@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		090F42B628528DA20098C7FD /* BlurButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090F42B528528DA20098C7FD /* BlurButton.swift */; };
 		0934CE2C284FD890003AC617 /* NoteDataObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0934CE2B284FD890003AC617 /* NoteDataObject.swift */; };
 		0934CE2E284FDD1D003AC617 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0934CE2D284FDD1D003AC617 /* Database.swift */; };
 		096F7A75284CD6E9004C9983 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096F7A74284CD6E9004C9983 /* AppDelegate.swift */; };
@@ -15,7 +16,6 @@
 		096F7A7C284CD6E9004C9983 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 096F7A7A284CD6E9004C9983 /* Main.storyboard */; };
 		096F7A7E284CD6EA004C9983 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 096F7A7D284CD6EA004C9983 /* Assets.xcassets */; };
 		096F7A81284CD6EA004C9983 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 096F7A7F284CD6EA004C9983 /* LaunchScreen.storyboard */; };
-		096F7A8A284CD7B8004C9983 /* NotesCollectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096F7A89284CD7B8004C9983 /* NotesCollectionViewController.swift */; };
 		096F7A8C284CD9AC004C9983 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096F7A8B284CD9AC004C9983 /* NoteCell.swift */; };
 		096F7A8F284D0886004C9983 /* NoteDataModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096F7A8E284D0886004C9983 /* NoteDataModel.swift */; };
 		096F7A91284D5810004C9983 /* NoteEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096F7A90284D5810004C9983 /* NoteEditViewController.swift */; };
@@ -23,6 +23,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		090F42B528528DA20098C7FD /* BlurButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurButton.swift; sourceTree = "<group>"; };
 		0934CE2B284FD890003AC617 /* NoteDataObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDataObject.swift; sourceTree = "<group>"; };
 		0934CE2D284FDD1D003AC617 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		096F7A71284CD6E9004C9983 /* Notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notes.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -33,7 +34,6 @@
 		096F7A7D284CD6EA004C9983 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		096F7A80284CD6EA004C9983 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		096F7A82284CD6EA004C9983 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		096F7A89284CD7B8004C9983 /* NotesCollectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesCollectionViewController.swift; sourceTree = "<group>"; };
 		096F7A8B284CD9AC004C9983 /* NoteCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCell.swift; sourceTree = "<group>"; };
 		096F7A8E284D0886004C9983 /* NoteDataModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDataModel.swift; sourceTree = "<group>"; };
 		096F7A90284D5810004C9983 /* NoteEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditViewController.swift; sourceTree = "<group>"; };
@@ -101,7 +101,7 @@
 		096F7A88284CD703004C9983 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				096F7A89284CD7B8004C9983 /* NotesCollectionViewController.swift */,
+				090F42B528528DA20098C7FD /* BlurButton.swift */,
 				096F7A8B284CD9AC004C9983 /* NoteCell.swift */,
 				096F7A90284D5810004C9983 /* NoteEditViewController.swift */,
 			);
@@ -253,7 +253,7 @@
 				096F7A91284D5810004C9983 /* NoteEditViewController.swift in Sources */,
 				096F7A75284CD6E9004C9983 /* AppDelegate.swift in Sources */,
 				096F7A8C284CD9AC004C9983 /* NoteCell.swift in Sources */,
-				096F7A8A284CD7B8004C9983 /* NotesCollectionViewController.swift in Sources */,
+				090F42B628528DA20098C7FD /* BlurButton.swift in Sources */,
 				0934CE2E284FDD1D003AC617 /* Database.swift in Sources */,
 				0934CE2C284FD890003AC617 /* NoteDataObject.swift in Sources */,
 				096F7A77284CD6E9004C9983 /* SceneDelegate.swift in Sources */,

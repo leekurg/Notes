@@ -66,27 +66,14 @@ class NoteCell: UICollectionViewCell {
     
     func setHighlighted( highlighted: Bool = true ) {
         UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve) { [weak self] in
-            if highlighted {
-                self?.layer.shadowOpacity = 0.6
-                self?.layer.shadowRadius = 12.0
-            }
-            else {
-                self?.layer.shadowOpacity = 0.4
-                self?.layer.shadowRadius = 7.0
-            }
+            self?.layer.shadowOpacity = highlighted ? 0.6 : 0.4
+            self?.layer.shadowRadius = highlighted ? 12.0 : 7.0
         }
     }
     
     func setSelected( selected: Bool = true ) {
         UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve) { [weak self] in
-            if selected {
-                self?.layer.borderWidth = 1
-                self?.layer.borderColor = UIColor(red: 0.5, green: 0.5, blue: 0.5, alpha: 1).cgColor
-            }
-            else {
-                self?.layer.borderWidth = 0
-                self?.layer.borderColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
-            }
+            self?.layer.borderWidth = selected ? 2 : 0
         }
     }
 }
