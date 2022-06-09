@@ -7,5 +7,5 @@ target 'Notes' do
 
   # Pods for Notes
   pod 'SnapKit', '~> 5.6.0'
-  pod 'RealmSwift', '~>10'
+  pod 'RealmSwift', '~>10.10'
 end

@@ -13,4 +13,8 @@ class NoteDataObject: Object {
     @objc dynamic var title = ""
     @objc dynamic var desc = ""
 //    dynamic var color: CGColor?
+    
+    override class func primaryKey() -> String? {
+            return "id"
+        }
 }

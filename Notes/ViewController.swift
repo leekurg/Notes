@@ -41,7 +41,7 @@ class ViewController: UIViewController {
     private var stackView: UIStackView!
     private var searchBar: UISearchBar!
     private var toolBar: UIToolbar!
-    private var buttonNew: UIButton!
+    private var buttonSuper: UIButton!
     
     //selection
     private var lpgr: UILongPressGestureRecognizer!
@@ -52,13 +52,25 @@ class ViewController: UIViewController {
             if _IsSelectionMode {
                 let color = #colorLiteral(red: 1, green: 0.7351920009, blue: 0.7335172296, alpha: 1)
                 animateCollectionTransition(toColor: color)
-                searchBar.isHidden = true
+                animateBarSwitch(showSearchBar: false)
             }
             else {
                 animateCollectionTransition(toColor: .white)
-                searchBar.isHidden = false
+                animateBarSwitch(showSearchBar: true)
+                
+                let selectedItems = collectionView.indexPathsForSelectedItems
+                guard let selectedItems = selectedItems else {
+                    return
+                }
+
+                for index in selectedItems {
+                    collectionView.deselectItem(at: index, animated: true)
+                    if let cell = collectionView.cellForItem(at: index) as? NoteCell {
+                        cell.setSelected( selected: false )
+                    }
+                }
             }
-            animateButtonNewToDelete(forward: _IsSelectionMode)
+            animateSuperButtonTransition(forward: _IsSelectionMode)
         }
         get {
             return _IsSelectionMode
@@ -74,7 +86,7 @@ class ViewController: UIViewController {
         
         setupToolBar()
         setupCollectionView()
-        setupNewButton()
+        setupSuperButton()
         setupLongGesture()
         
         reloadData()
@@ -146,16 +158,12 @@ class ViewController: UIViewController {
         collectionView.allowsMultipleSelection = true
     }
     
-    private func setupNewButton() {
+    private func setupSuperButton() {
         
-        buttonNew = {
-//            let button = UIButton(frame: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 60, height: 60)))
+        buttonSuper = {
             let button = UIButton(type: .system)
             let cornerR: CGFloat = 30
             button.layer.cornerRadius = cornerR
-//            button.setTitle("+", for: .normal)
-//            button.setImage(UIImage(systemName: "trash.fill"), for: .normal)
-//            button.setImage(UIImage(systemName: "plus" )?.withTintColor(.red, renderingMode: .alwaysOriginal), for: .normal)
             button.setImage(UIImage(systemName: "plus" ), for: .normal)
             button.layer.shadowOffset = CGSize(width: 15, height: 15)
             button.layer.shadowOpacity = 0.4
@@ -167,14 +175,14 @@ class ViewController: UIViewController {
             return button
         }()
         
-        view.addSubview(buttonNew)
+        view.addSubview(buttonSuper)
 
-        buttonNew.snp.makeConstraints { make in
+        buttonSuper.snp.makeConstraints { make in
             make.trailing.bottom.equalToSuperview().inset(40)
             make.width.height.equalTo(60)
         }
 
-        buttonNew.addTarget(self, action: #selector(didNewTouched), for: .touchUpInside)
+        buttonSuper.addTarget(self, action: #selector(didSuperButtonTouched), for: .touchUpInside)
     }
     
     private func setupLongGesture() {
@@ -185,7 +193,7 @@ class ViewController: UIViewController {
     }
     
     //MARK: - Action
-    @objc func handleLongPress(gesture : UILongPressGestureRecognizer!) {
+    @objc private func handleLongPress(gesture : UILongPressGestureRecognizer!) {
         if gesture.state != .ended {
             return
         }
@@ -200,7 +208,11 @@ class ViewController: UIViewController {
         }
     }
     
-    @objc func didNewTouched() {
+    @objc private func didSuperButtonTouched() {
+        isSelectionMode ? deleteSelectedNotes() : showNewNoteController()
+    }
+    
+    private func showNewNoteController() {
         let noteEditView = NoteEditViewController()
         noteEditView.informParentWhenDone = { [weak self] in
             self?.reloadData()
@@ -208,26 +220,58 @@ class ViewController: UIViewController {
         present(noteEditView, animated: true)
     }
     
-    @objc func selectAllDidTouched() {
-        print(#function)
-    }
-    
-    @objc func cancelSelectionDidTouched() {
-        defer {
-            isSelectionMode = false
-        }
+    private func deleteSelectedNotes() {
+        let indexPaths = collectionView.indexPathsForSelectedItems
         
-        let selectedItems = collectionView.indexPathsForSelectedItems
-        guard let selectedItems = selectedItems else {
+        guard let indexPaths = indexPaths else {
             return
         }
 
-        for index in selectedItems {
-            collectionView.deselectItem(at: index, animated: true)
-            if let cell = collectionView.cellForItem(at: index) as? NoteCell {
-                cell.setSelected( selected: false )
-             }
-         }
+        let alert = UIAlertController(title: "Removing", message: "\(indexPaths.count) note(s) will be removerd. Are you sure?", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Remove", style: .destructive, handler: { [weak self] _ in
+            guard let self = self else { return }
+            
+            let listId = indexPaths.map { index in self.notesModel[index.row].id }
+            let success = database.remove(listId: listId)
+            if !success {
+                self.showAlert(title: "Error", text: "Unable to delete from database")
+                self.isSelectionMode = false
+                return
+            }
+
+            self.collectionView!.performBatchUpdates({
+                self.reloadData()
+//                self.collectionView!.deleteItems(at: indexPaths)
+            }, completion: nil)
+            
+            self.isSelectionMode = false
+        }))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true)
+        
+        
+    }
+    
+    @objc private func selectAllDidTouched() {
+        print(#function)    //TODO
+    }
+    
+    @objc private func cancelSelectionDidTouched() {
+//        defer {
+            isSelectionMode = false
+//        }
+        
+//        let selectedItems = collectionView.indexPathsForSelectedItems
+//        guard let selectedItems = selectedItems else {
+//            return
+//        }
+//
+//        for index in selectedItems {
+//            collectionView.deselectItem(at: index, animated: true)
+//            if let cell = collectionView.cellForItem(at: index) as? NoteCell {
+//                cell.setSelected( selected: false )
+//             }
+//         }
     }
     
     //MARK: - Animation
@@ -238,16 +282,23 @@ class ViewController: UIViewController {
         )
     }
     
-    private func animateButtonNewToDelete( forward: Bool = true ) {
+    private func animateSuperButtonTransition( forward: Bool = true ) {
         if forward {
-            buttonNew.setImage(UIImage(systemName: "trash.fill" )?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
+            buttonSuper.setImage(UIImage(systemName: "trash.fill" )?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
         }
         else {
-            buttonNew.setImage(UIImage(systemName: "plus" ), for: .normal)
+            buttonSuper.setImage(UIImage(systemName: "plus" ), for: .normal)
         }
         
-        UIView.transition(with: buttonNew, duration: 0.5, options: .transitionCrossDissolve,
-                          animations: { self.buttonNew.backgroundColor = forward ? .red : #colorLiteral(red: 1, green: 0.4324872494, blue: 0, alpha: 0.480598096) },
+        UIView.transition(with: buttonSuper, duration: 0.5, options: .transitionCrossDissolve,
+                          animations: { self.buttonSuper.backgroundColor = forward ? .red : #colorLiteral(red: 1, green: 0.4324872494, blue: 0, alpha: 0.480598096) },
+                          completion: nil
+        )
+    }
+    
+    private func animateBarSwitch( showSearchBar: Bool ) {
+        UIView.transition(with: searchBar, duration: 0.5, options: .transitionCrossDissolve,
+                          animations: { self.searchBar.isHidden = !showSearchBar },
                           completion: nil
         )
     }
@@ -273,6 +324,8 @@ extension ViewController: UICollectionViewDataSource {
         collectionView.performBatchUpdates() { [weak self] in
             self?.notesModel = database.read()
         }
+        
+        print("Notes in db: \(notesModel.count)")
     }
 }
 
@@ -339,5 +392,15 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 20
+    }
+}
+
+//MARK: - Other
+
+extension ViewController {
+    private func showAlert( title: String, text: String ) {
+        let alert = UIAlertController(title: title, message: text, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+        self.present(alert, animated: true)
     }
 }

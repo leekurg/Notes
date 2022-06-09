@@ -13,6 +13,7 @@ class NoteEditViewController: UIViewController {
     private var titleTextView: UITextView!
     private var descTextView: UITextView!
     var model: NoteDataModel?
+    private var isNew = false
     private var isEdited = false
     
     var informParentWhenDone: (() -> Void)?
@@ -22,6 +23,10 @@ class NoteEditViewController: UIViewController {
         super.viewDidLoad()
 
         setupUI()
+        
+        if let model = model {
+            print("Shown note id: ", model.id)
+        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -30,9 +35,16 @@ class NoteEditViewController: UIViewController {
         guard isEdited else { return }
         
         if model == nil {
-            let id = database.read().count
+            isNew = true
+        }
+        
+        if isNew {
+            guard !titleTextView.text.isEmpty || !descTextView.text.isEmpty else { return }
+            
+            let id = database.lastId ?? 0
             model = NoteDataModel(id: id + 1)
         }
+        
         
         model?.timestamp = Date()
         model?.title = titleTextView.text

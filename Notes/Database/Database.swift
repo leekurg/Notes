@@ -9,6 +9,7 @@ import RealmSwift
 
 class Database {
     private let realm: Realm!
+    var lastId: Int?
     
     init() {
         do {
@@ -36,7 +37,17 @@ class Database {
     
     func read() -> [NoteDataModel] {
         let data = realm.objects( NoteDataObject.self )
+        lastId = data.max(ofProperty: "id") as Int?
         
         return data.map { NoteDataModel(object: $0) }
+    }
+    
+    func remove( listId: [Int]) -> Bool {
+        let objects = realm.objects( NoteDataObject.self )
+        try! realm.write {
+            realm.delete(objects.filter("id IN %@", listId))
+        }
+        
+        return true
     }
 }
