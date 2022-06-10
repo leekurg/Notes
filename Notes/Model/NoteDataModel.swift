@@ -13,7 +13,7 @@ struct NoteDataModel {
     var timestamp: Date
     var title: String?
     var description: String?
-    var color: CGColor?
+    var color: String?
 }
 
 extension NoteDataModel {
@@ -22,11 +22,12 @@ extension NoteDataModel {
         timestamp = object.timestamp
         title = object.title
         description = object.desc
-//        color = object.c
+        color = object.color
     }
     
     init( id: Int ) {
         self.id = id
         timestamp = Date()
+        color = NoteColors.Names.base.rawValue
     }
 }

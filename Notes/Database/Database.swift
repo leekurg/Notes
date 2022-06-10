@@ -30,9 +30,24 @@ class Database {
             object.timestamp = model.timestamp
             object.title = model.title ?? ""
             object.desc = model.description ?? ""
+            object.color = model.color ?? ""
                 
             realm.add(object)
         })
+    }
+    
+    func update(_ model: NoteDataModel?) {
+        guard let model = model else {return}
+        
+        if let object = realm.objects( NoteDataObject.self ).filter("id == %@", model.id).first {
+
+            try! realm.write({
+                object.timestamp = model.timestamp
+                object.title = model.title ?? ""
+                object.desc = model.description ?? ""
+                object.color = model.color ?? ""
+            })
+        }
     }
     
     func read() -> [NoteDataModel] {

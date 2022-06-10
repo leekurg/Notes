@@ -12,7 +12,7 @@ class NoteDataObject: Object {
     @objc dynamic var timestamp = Date()
     @objc dynamic var title = ""
     @objc dynamic var desc = ""
-//    dynamic var color: CGColor?
+    @objc dynamic var color = ""
     
     override class func primaryKey() -> String? {
             return "id"

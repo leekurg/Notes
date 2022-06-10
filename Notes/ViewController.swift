@@ -19,11 +19,14 @@ class ViewController: UIViewController {
 //        NoteDataModel(id: 2,
 //                      timestamp: Date(),
 //                      title: "Views",
-//                      description: "Views can host other views. Embedding one view inside another creates a containment relationship between the host view (known as the superview) and the embedded view (known as the subview). View hierarchies make it easier to manage views."),
+//                      description: "Views can host other views. Embedding one view inside another creates a containment relationship between the host view (known as the superview) and the embedded view (known as the subview). View hierarchies make it easier to manage views.",
+//                      color: UIColor(red: 233/255, green: 245/255, blue: 223/255, alpha: 1).cgColor ),
+//
 //        NoteDataModel(id: 3,
 //                      timestamp: Date(),
 //                      title: "Building blocks",
-//                      description: "Views and controls are the visual building blocks of your app’s user interface. Use them to draw and organize your app’s content onscreen."),
+//                      description: "Views and controls are the visual building blocks of your app’s user interface. Use them to draw and organize your app’s content onscreen.",
+//                      color: UIColor(red: 240/255, green: 225/255, blue: 245/255, alpha: 1).cgColor ),
 //        NoteDataModel(id: 4,
 //                      timestamp: Date(),
 //                      title: "Title 4",
@@ -316,15 +319,21 @@ extension ViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NoteCell.reuseID, for: indexPath) as! NoteCell
         cell.titleLabel.text = notesModel[indexPath.item].title
         cell.descLabel.text = notesModel[indexPath.item].description
-        cell.setBackgroundColor(color: notesModel[indexPath.item].color)
+        cell.backgroundColor = NoteColors.getColor(name: notesModel[indexPath.item].color)
         return cell
     }
     
-    func reloadData() {
+    func reloadData( at index: IndexPath? = nil ) {
+        
         collectionView.performBatchUpdates() { [weak self] in
             self?.notesModel = database.read()
+            if let index = index {
+                self?.collectionView.reloadItems(at: [index])
+            }
+            else {
+                self?.collectionView.reloadData()
+            }
         }
-        
         print("Notes in db: \(notesModel.count)")
     }
 }
@@ -349,8 +358,11 @@ extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let cell = collectionView.cellForItem(at: indexPath) as? NoteCell {
             if isSelectionMode == false {
-                let noteEditView = NoteEditViewController()
-                noteEditView.model = notesModel[indexPath.item]
+                let noteEditView = NoteEditViewController(model: notesModel[indexPath.item])
+//                noteEditView.model = notesModel[indexPath.item]
+                noteEditView.informParentWhenDone = { [weak self] in
+                    self?.reloadData( at: indexPath )
+                }
                 present(noteEditView, animated: true)
             }
             else {

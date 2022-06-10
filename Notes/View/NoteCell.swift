@@ -11,15 +11,25 @@ import SnapKit
 class NoteCell: UICollectionViewCell {
     static let reuseID = "NoteCell"
     
-    let titleLabel: UILabel!
+    let titleLabel: UITextView!
     let descLabel: UITextView!
     
     override init(frame: CGRect) {
                 
         titleLabel = {
-            let label = UILabel()
-            label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-            return label
+            let view = UITextView()
+            view.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+            view.backgroundColor = .clear
+            view.textContainerInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
+            view.clipsToBounds = true
+            return view
+        }()
+        
+        let separator: UIView = {
+            let view = UIView()
+            view.layer.borderWidth = 1.0
+            view.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
+            return view
         }()
         
         descLabel = {
@@ -28,24 +38,33 @@ class NoteCell: UICollectionViewCell {
             view.layer.cornerRadius = 20
             view.font = UIFont.systemFont(ofSize: 17, weight: .thin)
             view.isUserInteractionEnabled = false
+            view.textContainerInset = UIEdgeInsets(top: 5, left: 7, bottom: 5, right: 5)
             return view
         }()
         
         super.init(frame: frame)
         
-        backgroundColor = UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1)
+        backgroundColor = NoteColors.getColor(ename: .base)
         layer.cornerRadius = 20
         layer.shadowOffset = CGSize(width: 2, height: 2)
         layer.shadowRadius = 7.0
         layer.shadowOpacity = 0.4
         
         contentView.addSubview(titleLabel)
+        contentView.addSubview(separator)
         contentView.addSubview(descLabel)
         
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(5)
             make.leading.trailing.equalToSuperview().inset(7)
             make.height.equalToSuperview().multipliedBy(0.2)
+        }
+        
+        separator.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom)
+            make.centerX.equalToSuperview()
+            make.height.equalTo(1)
+            make.width.equalToSuperview().multipliedBy(0.9)
         }
 
         descLabel.snp.makeConstraints { make in
@@ -56,6 +75,13 @@ class NoteCell: UICollectionViewCell {
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func prepareForReuse() {
+        self.titleLabel.text = ""
+        self.descLabel.text = ""
+        self.backgroundColor = NoteColors.getColor(ename: .base)
+        self.setSelected(selected: false)
     }
     
     func setBackgroundColor( color: CGColor? ) {

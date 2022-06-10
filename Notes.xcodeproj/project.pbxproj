@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		090F42B628528DA20098C7FD /* BlurButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090F42B528528DA20098C7FD /* BlurButton.swift */; };
+		090F42B92853BF050098C7FD /* NoteColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090F42B82853BF050098C7FD /* NoteColors.swift */; };
 		0934CE2C284FD890003AC617 /* NoteDataObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0934CE2B284FD890003AC617 /* NoteDataObject.swift */; };
 		0934CE2E284FDD1D003AC617 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0934CE2D284FDD1D003AC617 /* Database.swift */; };
 		096F7A75284CD6E9004C9983 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096F7A74284CD6E9004C9983 /* AppDelegate.swift */; };
@@ -25,6 +26,7 @@
 /* Begin PBXFileReference section */
 		0353126D0C1D757F865834C7 /* Pods_Notes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Notes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		090F42B528528DA20098C7FD /* BlurButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurButton.swift; sourceTree = "<group>"; };
+		090F42B82853BF050098C7FD /* NoteColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteColors.swift; sourceTree = "<group>"; };
 		0934CE2B284FD890003AC617 /* NoteDataObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDataObject.swift; sourceTree = "<group>"; };
 		0934CE2D284FDD1D003AC617 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		096F7A71284CD6E9004C9983 /* Notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notes.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -94,6 +96,7 @@
 				096F7A7D284CD6EA004C9983 /* Assets.xcassets */,
 				096F7A7F284CD6EA004C9983 /* LaunchScreen.storyboard */,
 				096F7A82284CD6EA004C9983 /* Info.plist */,
+				090F42B82853BF050098C7FD /* NoteColors.swift */,
 			);
 			path = Notes;
 			sourceTree = "<group>";
@@ -257,6 +260,7 @@
 				0934CE2E284FDD1D003AC617 /* Database.swift in Sources */,
 				0934CE2C284FD890003AC617 /* NoteDataObject.swift in Sources */,
 				096F7A77284CD6E9004C9983 /* SceneDelegate.swift in Sources */,
+				090F42B92853BF050098C7FD /* NoteColors.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
