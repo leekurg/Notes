@@ -88,26 +88,26 @@ class NoteEditViewController: UIViewController {
         }()
         setButtonColorMark(color: NoteColors.getColorForName(name: model.color))
         
-        let buttonClose: UIButton = {
-            let button = UIButton()
-            let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .thin, scale: .large)
-            button.setImage(
-                UIImage(systemName: "xmark.circle" )?.withConfiguration(largeConfig)
-                    .withTintColor( UIColor(white: 1, alpha: 0.5), renderingMode: .alwaysOriginal)
-                    , for: .normal)
-            button.layer.cornerRadius = 15
-            
-            button.addTarget(self, action: #selector(didCloseTouched), for: .touchUpInside)
-            
-            return button
-        }()
+//        let buttonClose: UIButton = {
+//            let button = UIButton()
+//            let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .thin, scale: .large)
+//            button.setImage(
+//                UIImage(systemName: "xmark.circle" )?.withConfiguration(largeConfig)
+//                    .withTintColor( UIColor(white: 1, alpha: 0.5), renderingMode: .alwaysOriginal)
+//                    , for: .normal)
+//            button.layer.cornerRadius = 15
+//
+//            button.addTarget(self, action: #selector(didCloseTouched), for: .touchUpInside)
+//
+//            return button
+//        }()
         
         titleTextView = {
             let view = UITextView()
             view.delegate = self
             view.font = UIFont.systemFont(ofSize: 24, weight: .bold)
             view.backgroundColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 0.3)
-            view.textContainerInset = UIEdgeInsets(top: 20, left: 45, bottom: 10, right: 45)
+            view.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 10, right: 45)
             return view
         }()
         
@@ -121,7 +121,7 @@ class NoteEditViewController: UIViewController {
         }()
         
         blurEffectView.contentView.addSubview(buttonColor)
-        blurEffectView.contentView.addSubview(buttonClose)
+//        blurEffectView.contentView.addSubview(buttonClose)
         blurEffectView.contentView.addSubview(titleTextView)
         blurEffectView.contentView.addSubview(descTextView)
         view.addSubview(backView)
@@ -129,18 +129,19 @@ class NoteEditViewController: UIViewController {
     
         buttonColor.snp.makeConstraints { make in
             make.centerY.equalTo(titleTextView)
-            make.left.equalToSuperview().inset(15)
+            make.right.equalToSuperview().inset(15)
             make.width.height.equalTo(30)
         }
         
-        buttonClose.snp.makeConstraints { make in
-            make.top.right.equalToSuperview().inset(5)
-            make.width.height.equalTo(30)
-        }
+//        buttonClose.snp.makeConstraints { make in
+//            make.top.right.equalToSuperview().inset(5)
+//            make.width.height.equalTo(30)
+//        }
         
         titleTextView.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
-            make.height.equalToSuperview().multipliedBy(0.1)
+//            make.height.equalToSuperview().multipliedBy(0.1)
+            make.height.equalTo(70)
         }
 
         descTextView.snp.makeConstraints { make in
@@ -149,7 +150,7 @@ class NoteEditViewController: UIViewController {
         }
         
         blurEffectView.contentView.bringSubviewToFront(buttonColor)
-        blurEffectView.contentView.bringSubviewToFront(buttonClose)
+//        blurEffectView.contentView.bringSubviewToFront(buttonClose)
         
         //fill
         if let model = model {

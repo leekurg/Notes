@@ -22,15 +22,20 @@ class NoteCell: UICollectionViewCell {
             view.backgroundColor = .clear
             view.textContainerInset = UIEdgeInsets(top: 5, left: 5, bottom: 5, right: 5)
             view.clipsToBounds = true
+            view.isUserInteractionEnabled = false
+            
+            view.isScrollEnabled = false;
+            view.textContainer.maximumNumberOfLines = 0;
+            view.textContainer.lineBreakMode = .byTruncatingTail;
             return view
         }()
         
-        let separator: UIView = {
-            let view = UIView()
-            view.layer.borderWidth = 1.0
-            view.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
-            return view
-        }()
+//        let separator: UIView = {
+//            let view = UIView()
+//            view.layer.borderWidth = 1.0
+//            view.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
+//            return view
+//        }()
         
         descLabel = {
             let view = UITextView()
@@ -38,11 +43,16 @@ class NoteCell: UICollectionViewCell {
             view.layer.cornerRadius = 20
             view.font = UIFont.systemFont(ofSize: 17, weight: .thin)
             view.isUserInteractionEnabled = false
-            view.textContainerInset = UIEdgeInsets(top: 5, left: 7, bottom: 5, right: 5)
+            
+            view.isScrollEnabled = false;
+            view.textContainer.maximumNumberOfLines = 0;
+            view.textContainer.lineBreakMode = .byTruncatingTail;
             return view
         }()
         
         super.init(frame: frame)
+        descLabel.textContainerInset = UIEdgeInsets(top: contentView.frame.size.height*0.2, left: 7, bottom: 5, right: 5)
+        
         
         backgroundColor = NoteColors.getColor(ename: .base)
         layer.cornerRadius = 20
@@ -51,25 +61,34 @@ class NoteCell: UICollectionViewCell {
         layer.shadowOpacity = 0.4
         
         contentView.addSubview(titleLabel)
-        contentView.addSubview(separator)
+//        contentView.addSubview(separator)
         contentView.addSubview(descLabel)
         
+//        titleLabel.snp.makeConstraints { make in
+//            make.top.equalToSuperview().inset(5)
+//            make.leading.trailing.equalToSuperview().inset(7)
+//            make.height.equalToSuperview().multipliedBy(0.2)
+//        }
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(5)
             make.leading.trailing.equalToSuperview().inset(7)
             make.height.equalToSuperview().multipliedBy(0.2)
         }
         
-        separator.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom)
-            make.centerX.equalToSuperview()
-            make.height.equalTo(1)
-            make.width.equalToSuperview().multipliedBy(0.9)
-        }
+        
+//        separator.snp.makeConstraints { make in
+//            make.top.equalTo(titleLabel.snp.bottom)
+//            make.centerX.equalToSuperview()
+//            make.height.equalTo(1)
+//            make.width.equalToSuperview().multipliedBy(0.9)
+//        }
 
+//        descLabel.snp.makeConstraints { make in
+//            make.bottom.leading.trailing.equalToSuperview().inset(5)
+//            make.top.equalTo(titleLabel.snp.bottom)
+//        }
         descLabel.snp.makeConstraints { make in
-            make.bottom.leading.trailing.equalToSuperview().inset(5)
-            make.top.equalTo(titleLabel.snp.bottom)
+            make.top.bottom.leading.trailing.equalToSuperview().inset(5)
         }
     }
     
@@ -88,6 +107,11 @@ class NoteCell: UICollectionViewCell {
         guard let color = color else { return }
         
         backgroundColor = UIColor(cgColor: color)
+    }
+    
+    func setTitleHidden() {
+        titleLabel.isHidden = true
+        descLabel.textContainerInset = UIEdgeInsets(top: 5, left: 7, bottom: 5, right: 5)
     }
     
     func setHighlighted( highlighted: Bool = true ) {

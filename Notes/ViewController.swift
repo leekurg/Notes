@@ -318,7 +318,9 @@ extension ViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NoteCell.reuseID, for: indexPath) as! NoteCell
         cell.titleLabel.text = notesModel[indexPath.item].title
+        if cell.titleLabel.text.isEmpty { cell.setTitleHidden() }
         cell.descLabel.text = notesModel[indexPath.item].description
+        
         cell.backgroundColor = NoteColors.getColor(name: notesModel[indexPath.item].color)
         return cell
     }
@@ -359,7 +361,6 @@ extension ViewController: UICollectionViewDelegate {
         if let cell = collectionView.cellForItem(at: indexPath) as? NoteCell {
             if isSelectionMode == false {
                 let noteEditView = NoteEditViewController(model: notesModel[indexPath.item])
-//                noteEditView.model = notesModel[indexPath.item]
                 noteEditView.informParentWhenDone = { [weak self] in
                     self?.reloadData( at: indexPath )
                 }
