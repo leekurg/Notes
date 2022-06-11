@@ -92,11 +92,11 @@
 				096F7A74284CD6E9004C9983 /* AppDelegate.swift */,
 				096F7A76284CD6E9004C9983 /* SceneDelegate.swift */,
 				096F7A78284CD6E9004C9983 /* ViewController.swift */,
+				090F42B82853BF050098C7FD /* NoteColors.swift */,
 				096F7A7A284CD6E9004C9983 /* Main.storyboard */,
 				096F7A7D284CD6EA004C9983 /* Assets.xcassets */,
 				096F7A7F284CD6EA004C9983 /* LaunchScreen.storyboard */,
 				096F7A82284CD6EA004C9983 /* Info.plist */,
-				090F42B82853BF050098C7FD /* NoteColors.swift */,
 			);
 			path = Notes;
 			sourceTree = "<group>";

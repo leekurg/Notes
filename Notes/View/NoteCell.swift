@@ -13,6 +13,7 @@ class NoteCell: UICollectionViewCell {
     
     let titleLabel: UITextView!
     let descLabel: UITextView!
+    let selectMark: UIImageView!
     
     override init(frame: CGRect) {
                 
@@ -30,13 +31,6 @@ class NoteCell: UICollectionViewCell {
             return view
         }()
         
-//        let separator: UIView = {
-//            let view = UIView()
-//            view.layer.borderWidth = 1.0
-//            view.layer.borderColor = UIColor(white: 0, alpha: 0.1).cgColor
-//            return view
-//        }()
-        
         descLabel = {
             let view = UITextView()
             view.backgroundColor = UIColor.clear
@@ -47,6 +41,13 @@ class NoteCell: UICollectionViewCell {
             view.isScrollEnabled = false;
             view.textContainer.maximumNumberOfLines = 0;
             view.textContainer.lineBreakMode = .byTruncatingTail;
+            return view
+        }()
+        
+        selectMark = {
+            let view = UIImageView()
+            view.image = UIImage(systemName: "checkmark.circle.fill")
+            view.alpha = 0
             return view
         }()
         
@@ -61,34 +62,21 @@ class NoteCell: UICollectionViewCell {
         layer.shadowOpacity = 0.4
         
         contentView.addSubview(titleLabel)
-//        contentView.addSubview(separator)
         contentView.addSubview(descLabel)
+        contentView.addSubview(selectMark)
         
-//        titleLabel.snp.makeConstraints { make in
-//            make.top.equalToSuperview().inset(5)
-//            make.leading.trailing.equalToSuperview().inset(7)
-//            make.height.equalToSuperview().multipliedBy(0.2)
-//        }
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(5)
             make.leading.trailing.equalToSuperview().inset(7)
             make.height.equalToSuperview().multipliedBy(0.2)
         }
-        
-        
-//        separator.snp.makeConstraints { make in
-//            make.top.equalTo(titleLabel.snp.bottom)
-//            make.centerX.equalToSuperview()
-//            make.height.equalTo(1)
-//            make.width.equalToSuperview().multipliedBy(0.9)
-//        }
 
-//        descLabel.snp.makeConstraints { make in
-//            make.bottom.leading.trailing.equalToSuperview().inset(5)
-//            make.top.equalTo(titleLabel.snp.bottom)
-//        }
         descLabel.snp.makeConstraints { make in
             make.top.bottom.leading.trailing.equalToSuperview().inset(5)
+        }
+        
+        selectMark.snp.makeConstraints { make in
+            make.bottom.right.equalToSuperview().inset(7)
         }
     }
     
@@ -124,6 +112,7 @@ class NoteCell: UICollectionViewCell {
     func setSelected( selected: Bool = true ) {
         UIView.transition(with: self, duration: 0.3, options: .transitionCrossDissolve) { [weak self] in
             self?.layer.borderWidth = selected ? 2 : 0
+            self?.selectMark.alpha = selected ? 1 : 0
         }
     }
 }

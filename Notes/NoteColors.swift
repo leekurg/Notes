@@ -48,7 +48,7 @@ struct NoteColors {
         case .blue:     return UIColor.blue
         case .pink:     return UIColor(red: 255/255, green: 150/255, blue: 150/255, alpha: 1)
         case .cream:    return UIColor(red: 230/255, green: 213/255, blue: 161/255, alpha: 1)
-        case .green:    return UIColor.green
+        case .green:    return UIColor(red: 0, green: 0.8, blue: 0, alpha: 1)
         case .purple:   return UIColor.purple
         default:        return UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
         }

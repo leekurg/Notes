@@ -41,7 +41,8 @@ class ViewController: UIViewController {
     
     private let itemsPerRow: CGFloat = 2
     private var collectionView: UICollectionView!
-    private var stackView: UIStackView!
+    private var stackViewBar: UIStackView!
+    private var stackViewCollection: UIStackView!
     private var searchBar: UISearchBar!
     private var toolBar: UIToolbar!
     private var buttonSuper: UIButton!
@@ -55,24 +56,11 @@ class ViewController: UIViewController {
             if _IsSelectionMode {
                 let color = #colorLiteral(red: 1, green: 0.7351920009, blue: 0.7335172296, alpha: 1)
                 animateCollectionTransition(toColor: color)
-                animateBarSwitch(showSearchBar: false)
             }
             else {
                 animateCollectionTransition(toColor: .white)
-                animateBarSwitch(showSearchBar: true)
-                
-                let selectedItems = collectionView.indexPathsForSelectedItems
-                guard let selectedItems = selectedItems else {
-                    return
-                }
-
-                for index in selectedItems {
-                    collectionView.deselectItem(at: index, animated: true)
-                    if let cell = collectionView.cellForItem(at: index) as? NoteCell {
-                        cell.setSelected( selected: false )
-                    }
-                }
             }
+            animateBarSwitch()
             animateSuperButtonTransition(forward: _IsSelectionMode)
         }
         get {
@@ -97,18 +85,6 @@ class ViewController: UIViewController {
 
     
     //MARK: - Setup UI
-    private func setupSearchBar() {
-        searchBar = UISearchBar()
-        searchBar.clipsToBounds = true
-        
-        view.addSubview(searchBar)
-        
-        searchBar.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.leading.trailing.equalToSuperview()
-        }
-    }
-    
     private func setupToolBar() {
         searchBar = UISearchBar()
         
@@ -121,8 +97,20 @@ class ViewController: UIViewController {
         }()
         buttonSelect.addTarget(self, action: #selector(selectAllDidTouched), for: .touchUpInside)
         
+        let labelSelect: UILabel = {
+            let label = UILabel()
+            label.text = "Select notes"
+            label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+            return label
+        }()
         items.append(
             UIBarButtonItem(customView: buttonSelect)
+        )
+        items.append(
+            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+        )
+        items.append(
+            UIBarButtonItem(customView: labelSelect)
         )
         items.append(
             UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
@@ -132,14 +120,18 @@ class ViewController: UIViewController {
         )
         toolBar.setItems(items, animated: true)
         
-        stackView = UIStackView(arrangedSubviews: [searchBar, toolBar])
+        stackViewBar = UIStackView(arrangedSubviews: [toolBar, searchBar])
+        stackViewBar.axis = .vertical
         
-        view.addSubview(stackView)
+        view.addSubview(stackViewBar)
         
-        stackView.snp.makeConstraints { make in
+        stackViewBar.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
             make.leading.trailing.equalToSuperview()
         }
+        
+        searchBar.isHidden = true
+        toolBar.isHidden = true
     }
     
     private func setupCollectionView() {
@@ -148,17 +140,51 @@ class ViewController: UIViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         
-        view.addSubview(collectionView)
-        
-        collectionView.snp.makeConstraints { make in
-            make.top.equalTo(stackView.snp.bottom)
-            make.bottom.leading.trailing.equalToSuperview()
-        }
         
         collectionView.register(NoteCell.self, forCellWithReuseIdentifier: NoteCell.reuseID)
         collectionView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
 //        collectionView.contentInsetAdjustmentBehavior = .automatic
         collectionView.allowsMultipleSelection = true
+        
+        let noContentView: UIView = {
+            let view = UIView()
+            
+            let labelTitle = UILabel()
+            labelTitle.text = "No content yet"
+            labelTitle.textColor = .lightGray
+            labelTitle.font = UIFont.systemFont(ofSize: 25, weight: .bold)
+            
+            let labelDesc = UILabel()
+            labelDesc.text = "No notes has been created yet"
+            labelDesc.textColor = .lightGray
+            
+            view.addSubview(labelTitle)
+            view.addSubview(labelDesc)
+            
+            labelTitle.snp.makeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.centerY.equalToSuperview().offset(-50)
+            }
+            
+            labelDesc.snp.makeConstraints { make in
+                make.top.equalTo(labelTitle.snp.bottom)
+                make.centerX.equalTo(labelTitle)
+            }
+            
+            return view
+        }()
+        
+        stackViewCollection = UIStackView(arrangedSubviews: [collectionView, noContentView])
+        stackViewCollection.axis = .vertical
+        
+        view.addSubview(stackViewCollection)
+        
+        stackViewCollection.snp.makeConstraints { make in
+            make.top.equalTo(self.stackViewBar.snp.bottom)
+            make.bottom.leading.trailing.equalToSuperview()
+        }
+        
+        collectionView.isHidden = true
     }
     
     private func setupSuperButton() {
@@ -167,9 +193,9 @@ class ViewController: UIViewController {
             let button = UIButton(type: .system)
             let cornerR: CGFloat = 30
             button.layer.cornerRadius = cornerR
-            button.setImage(UIImage(systemName: "plus" ), for: .normal)
+            button.setImage(UIImage(systemName: "plus" )?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)), for: .normal)
             button.layer.shadowOffset = CGSize(width: 15, height: 15)
-            button.layer.shadowOpacity = 0.4
+            button.layer.shadowOpacity = 0.3
             button.layer.shadowRadius = 10
             button.layer.shadowColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1).cgColor
             
@@ -186,6 +212,7 @@ class ViewController: UIViewController {
         }
 
         buttonSuper.addTarget(self, action: #selector(didSuperButtonTouched), for: .touchUpInside)
+        
     }
     
     private func setupLongGesture() {
@@ -212,6 +239,7 @@ class ViewController: UIViewController {
     }
     
     @objc private func didSuperButtonTouched() {
+        animateButtonPressed(button: buttonSuper)
         isSelectionMode ? deleteSelectedNotes() : showNewNoteController()
     }
     
@@ -244,7 +272,6 @@ class ViewController: UIViewController {
 
             self.collectionView!.performBatchUpdates({
                 self.reloadData()
-//                self.collectionView!.deleteItems(at: indexPaths)
             }, completion: nil)
             
             self.isSelectionMode = false
@@ -264,17 +291,17 @@ class ViewController: UIViewController {
             isSelectionMode = false
 //        }
         
-//        let selectedItems = collectionView.indexPathsForSelectedItems
-//        guard let selectedItems = selectedItems else {
-//            return
-//        }
-//
-//        for index in selectedItems {
-//            collectionView.deselectItem(at: index, animated: true)
-//            if let cell = collectionView.cellForItem(at: index) as? NoteCell {
-//                cell.setSelected( selected: false )
-//             }
-//         }
+        let selectedItems = collectionView.indexPathsForSelectedItems
+        guard let selectedItems = selectedItems else {
+            return
+        }
+
+        for index in selectedItems {
+            collectionView.deselectItem(at: index, animated: true)
+            if let cell = collectionView.cellForItem(at: index) as? NoteCell {
+                cell.setSelected( selected: false )
+             }
+         }
     }
     
     //MARK: - Animation
@@ -290,20 +317,37 @@ class ViewController: UIViewController {
             buttonSuper.setImage(UIImage(systemName: "trash.fill" )?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
         }
         else {
-            buttonSuper.setImage(UIImage(systemName: "plus" ), for: .normal)
+            buttonSuper.setImage(
+                UIImage(systemName: "plus" )?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)), for: .normal)
         }
         
         UIView.transition(with: buttonSuper, duration: 0.5, options: .transitionCrossDissolve,
-                          animations: { self.buttonSuper.backgroundColor = forward ? .red : #colorLiteral(red: 1, green: 0.4324872494, blue: 0, alpha: 0.480598096) },
+                          animations: { [weak self] in self?.buttonSuper.backgroundColor = forward ? .red : #colorLiteral(red: 1, green: 0.4324872494, blue: 0, alpha: 0.480598096) },
                           completion: nil
         )
     }
     
-    private func animateBarSwitch( showSearchBar: Bool ) {
-        UIView.transition(with: searchBar, duration: 0.5, options: .transitionCrossDissolve,
-                          animations: { self.searchBar.isHidden = !showSearchBar },
+    private func animateBarSwitch() {
+        UIView.transition(with: searchBar, duration: 0.3, options: .transitionCrossDissolve,
+                          animations: { [weak self] in self?.switchStackView(stack: self?.stackViewBar) },
                           completion: nil
         )
+    }
+    
+    private func animateButtonPressed( button: UIButton ) {
+
+            button.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+
+            UIView.animate(withDuration: 1.0,
+                           delay: 0,
+                           usingSpringWithDamping: CGFloat(10.0),
+                           initialSpringVelocity: CGFloat(4.0),
+                           options: UIView.AnimationOptions.allowUserInteraction,
+                           animations: {
+                                button.transform = CGAffineTransform.identity
+                            },
+                           completion: { Void in()  }
+            )
     }
 }
    
@@ -328,12 +372,26 @@ extension ViewController: UICollectionViewDataSource {
     func reloadData( at index: IndexPath? = nil ) {
         
         collectionView.performBatchUpdates() { [weak self] in
-            self?.notesModel = database.read()
+            guard let self = self else { return }
+            
+            self.notesModel = database.read()
+            
+            //init state: there is data, collection hidden
+            if self.notesModel.count > 0 && self.collectionView.isHidden {
+                switchStackView(stack: stackViewCollection)
+                searchBar.isHidden = false
+            }
+            //just deleted last note
+            else if self.notesModel.count == 0 && !self.collectionView.isHidden
+            {
+                switchStackView(stack: stackViewCollection)
+            }
+            
             if let index = index {
-                self?.collectionView.reloadItems(at: [index])
+                self.collectionView.reloadItems(at: [index])
             }
             else {
-                self?.collectionView.reloadData()
+                self.collectionView.reloadData()
             }
         }
         print("Notes in db: \(notesModel.count)")
@@ -357,18 +415,27 @@ extension ViewController: UICollectionViewDelegate {
     }
     
     // Selection
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        if let cell = collectionView.cellForItem(at: indexPath) as? NoteCell {
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        if let _ = collectionView.cellForItem(at: indexPath) as? NoteCell {
             if isSelectionMode == false {
                 let noteEditView = NoteEditViewController(model: notesModel[indexPath.item])
                 noteEditView.informParentWhenDone = { [weak self] in
                     self?.reloadData( at: indexPath )
                 }
                 present(noteEditView, animated: true)
+                return false
             }
             else {
-                cell.setSelected()
+                return true
             }
+        }
+        
+        return false
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) as? NoteCell {
+            cell.setSelected()
         }
     }
 
@@ -415,5 +482,16 @@ extension ViewController {
         let alert = UIAlertController(title: title, message: text, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
         self.present(alert, animated: true)
+    }
+    
+    func switchStackView( stack: UIStackView? ) {
+        guard let stack = stack else { return }
+        
+        func reverseViewHiddenProp( view: UIView? ) {
+            if let v = view {   v.isHidden = !v.isHidden    }
+        }
+        
+        reverseViewHiddenProp(view: stack.arrangedSubviews.first)
+        reverseViewHiddenProp(view: stack.arrangedSubviews.last)
     }
 }
