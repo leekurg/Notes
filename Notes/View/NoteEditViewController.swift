@@ -12,6 +12,9 @@ class NoteEditViewController: UIViewController {
     
     private var titleTextView: UITextView!
     private var descTextView: UITextView!
+    private var titlePlaceholder: UILabel?
+    private var descPlaceholder: UILabel?
+    
     private var buttonColor: UIButton!
     private var backView: UIView!
     
@@ -108,15 +111,51 @@ class NoteEditViewController: UIViewController {
             view.font = UIFont.systemFont(ofSize: 24, weight: .bold)
             view.backgroundColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 0.3)
             view.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 10, right: 45)
+            view.text = model?.title ?? nil
+            
+
+            titlePlaceholder = {
+                let label = UILabel()
+                label.text = "Enter title..."
+                label.font = .italicSystemFont(ofSize: (view.font?.pointSize)!)
+                view.addSubview(label)
+                label.textColor = .gray
+                label.isHidden = !view.text.isEmpty
+                
+                label.snp.makeConstraints { make in
+                    make.leading.equalToSuperview().inset( view.textContainerInset.left + 5 )
+                    make.centerY.equalToSuperview()
+                }
+                return label
+            }()
+            
             return view
         }()
         
         descTextView = {
             let view = UITextView()
             view.delegate = self
-            view.font = UIFont.systemFont(ofSize: 20, weight: .thin)
+            view.font = UIFont.systemFont(ofSize: 20, weight: .regular)
             view.backgroundColor = .clear
             view.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+            view.text = model?.description ?? nil
+            
+            descPlaceholder = {
+                let label = UILabel()
+                label.text = "Enter text..."
+                label.font = .italicSystemFont(ofSize: (view.font?.pointSize)!)
+                view.addSubview(label)
+                label.textColor = .gray
+                label.isHidden = !view.text.isEmpty
+                
+                label.snp.makeConstraints { make in
+                    make.top.equalToSuperview().inset( view.textContainerInset.top )
+                    make.leading.equalToSuperview().inset( view.textContainerInset.left + 5 )
+
+                }
+                return label
+            }()
+            
             return view
         }()
         
@@ -151,12 +190,6 @@ class NoteEditViewController: UIViewController {
         
         blurEffectView.contentView.bringSubviewToFront(buttonColor)
 //        blurEffectView.contentView.bringSubviewToFront(buttonClose)
-        
-        //fill
-        if let model = model {
-            titleTextView.text = model.title
-            descTextView.text = model.description
-        }
     }
     
     private func createColorMenu() -> UIMenu {
@@ -209,5 +242,13 @@ class NoteEditViewController: UIViewController {
 extension NoteEditViewController: UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
         self.isEdited = true
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        switch(textView) {
+        case titleTextView: titlePlaceholder?.isHidden = !textView.text.isEmpty
+        case descTextView: descPlaceholder?.isHidden = !textView.text.isEmpty
+        default: return
+        }
     }
 }

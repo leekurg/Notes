@@ -207,7 +207,7 @@ class ViewController: UIViewController {
         view.addSubview(buttonSuper)
 
         buttonSuper.snp.makeConstraints { make in
-            make.trailing.bottom.equalToSuperview().inset(40)
+            make.trailing.bottom.equalToSuperview().inset(20)
             make.width.height.equalTo(60)
         }
 
