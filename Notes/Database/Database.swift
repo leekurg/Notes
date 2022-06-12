@@ -57,6 +57,15 @@ class Database {
         return data.map { NoteDataModel(object: $0) }
     }
     
+    func search( query: String? ) -> [NoteDataModel] {
+        guard let query = query else {
+            return read()
+        }
+        
+        let data = realm.objects( NoteDataObject.self ).filter("desc contains[c] %@ OR title contains[c] %@", query, query)
+        return data.map { NoteDataModel(object: $0) }
+    }
+    
     func remove( listId: [Int]) -> Bool {
         let objects = realm.objects( NoteDataObject.self )
         try! realm.write {

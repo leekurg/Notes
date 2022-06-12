@@ -10,6 +10,7 @@ import SnapKit
 
 class NoteEditViewController: UIViewController {
     
+    private var controlPanel: UIView!
     private var titleTextView: UITextView!
     private var descTextView: UITextView!
     private var titlePlaceholder: UILabel?
@@ -78,38 +79,60 @@ class NoteEditViewController: UIViewController {
         blurEffectView.frame = view.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
-        buttonColor = {
-            let button = UIButton()
-            button.layer.borderWidth = 1
-            button.layer.borderColor = UIColor(white: 1, alpha: 0.5).cgColor
-            button.layer.cornerRadius = 15
+        controlPanel = {
+            let view = UIView()
+            view.backgroundColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 0.4)
             
-            button.menu = createColorMenu()
-            button.showsMenuAsPrimaryAction = true
+            buttonColor = {
+                let button = UIButton()
+                button.layer.borderWidth = 1
+                button.layer.borderColor = UIColor(white: 1, alpha: 0.5).cgColor
+                button.layer.cornerRadius = 15
+                
+                button.menu = createColorMenu()
+                button.showsMenuAsPrimaryAction = true
+                
+                return button
+            }()
+            setButtonColorMark(color: NoteColors.getColorForName(name: model.color))
             
-            return button
+            let buttonClose: UIButton = {
+                let button = UIButton()
+                let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .thin, scale: .large)
+                button.setImage(
+                    UIImage(systemName: "xmark.circle" )?.withConfiguration(largeConfig)
+                        .withTintColor( UIColor(white: 1, alpha: 0.5), renderingMode: .alwaysOriginal)
+                        , for: .normal)
+                button.layer.cornerRadius = 15
+
+                button.addTarget(self, action: #selector(didCloseTouched), for: .touchUpInside)
+
+                return button
+            }()
+            
+            view.addSubview(buttonColor)
+            view.addSubview(buttonClose)
+            
+            buttonColor.snp.makeConstraints { make in
+                make.centerY.equalToSuperview()
+                make.leading.equalToSuperview().inset(15)
+                make.width.height.equalTo(30)
+            }
+            
+            buttonClose.snp.makeConstraints { make in
+                make.centerY.equalToSuperview()
+                make.trailing.equalToSuperview().inset(15)
+                make.width.height.equalTo(30)
+            }
+            
+            return view
         }()
-        setButtonColorMark(color: NoteColors.getColorForName(name: model.color))
-        
-//        let buttonClose: UIButton = {
-//            let button = UIButton()
-//            let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .thin, scale: .large)
-//            button.setImage(
-//                UIImage(systemName: "xmark.circle" )?.withConfiguration(largeConfig)
-//                    .withTintColor( UIColor(white: 1, alpha: 0.5), renderingMode: .alwaysOriginal)
-//                    , for: .normal)
-//            button.layer.cornerRadius = 15
-//
-//            button.addTarget(self, action: #selector(didCloseTouched), for: .touchUpInside)
-//
-//            return button
-//        }()
         
         titleTextView = {
             let view = UITextView()
             view.delegate = self
             view.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-            view.backgroundColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 0.3)
+            view.backgroundColor = .clear
             view.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 10, right: 45)
             view.text = model?.title ?? nil
             
@@ -156,30 +179,40 @@ class NoteEditViewController: UIViewController {
                 return label
             }()
             
+            let _: UIView = {
+                let separator = UIView()
+                separator.layer.borderWidth = 1
+                separator.layer.borderColor = UIColor(white: 0.3, alpha: 0.2).cgColor
+                
+                view.addSubview(separator)
+                
+                separator.snp.makeConstraints { make in
+                    make.bottom.equalTo(view.snp.bottom).inset(-1)
+                    make.centerX.equalToSuperview()
+                    make.height.equalTo(1)
+                    make.width.equalToSuperview().multipliedBy(0.9)
+                }
+
+                return separator
+            }()
+            
             return view
         }()
         
-        blurEffectView.contentView.addSubview(buttonColor)
-//        blurEffectView.contentView.addSubview(buttonClose)
+        blurEffectView.contentView.addSubview(controlPanel)
         blurEffectView.contentView.addSubview(titleTextView)
         blurEffectView.contentView.addSubview(descTextView)
         view.addSubview(backView)
         view.addSubview(blurEffectView)
-    
-        buttonColor.snp.makeConstraints { make in
-            make.centerY.equalTo(titleTextView)
-            make.right.equalToSuperview().inset(15)
-            make.width.height.equalTo(30)
+        
+        controlPanel.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            make.height.equalTo(70)
         }
         
-//        buttonClose.snp.makeConstraints { make in
-//            make.top.right.equalToSuperview().inset(5)
-//            make.width.height.equalTo(30)
-//        }
-        
         titleTextView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
-//            make.height.equalToSuperview().multipliedBy(0.1)
+            make.leading.trailing.equalToSuperview()
+            make.top.equalTo(controlPanel.snp.bottom)
             make.height.equalTo(70)
         }
 
@@ -187,9 +220,6 @@ class NoteEditViewController: UIViewController {
             make.bottom.leading.trailing.equalToSuperview()
             make.top.equalTo(titleTextView.snp.bottom)
         }
-        
-        blurEffectView.contentView.bringSubviewToFront(buttonColor)
-//        blurEffectView.contentView.bringSubviewToFront(buttonClose)
     }
     
     private func createColorMenu() -> UIMenu {

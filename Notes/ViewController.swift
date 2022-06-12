@@ -39,7 +39,11 @@ class ViewController: UIViewController {
 //                      color: UIColor(red: 255/255, green: 200/255, blue: 200/255, alpha: 1 ).cgColor)
 //    ]
     
-    private let itemsPerRow: CGFloat = 2
+    private let preferWidthNoteItem: CGFloat = 160
+    private let preferPaddingNoteItem: CGFloat = 20
+    
+    private var timerSearchDelay: Timer?
+    
     private var collectionView: UICollectionView!
     private var stackViewBar: UIStackView!
     private var stackViewCollection: UIStackView!
@@ -47,7 +51,7 @@ class ViewController: UIViewController {
     private var toolBar: UIToolbar!
     private var buttonSuper: UIButton!
     
-    //selection
+    private var isSearching = false
     private var lpgr: UILongPressGestureRecognizer!
     private var _IsSelectionMode = false
     private var isSelectionMode: Bool {
@@ -67,7 +71,7 @@ class ViewController: UIViewController {
             return _IsSelectionMode
         }
     }
-    //
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -87,6 +91,7 @@ class ViewController: UIViewController {
     //MARK: - Setup UI
     private func setupToolBar() {
         searchBar = UISearchBar()
+        searchBar.delegate = self
         
         toolBar = UIToolbar()
         var items = [UIBarButtonItem]()
@@ -143,6 +148,7 @@ class ViewController: UIViewController {
         
         collectionView.register(NoteCell.self, forCellWithReuseIdentifier: NoteCell.reuseID)
         collectionView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+//        collectionView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 //        collectionView.contentInsetAdjustmentBehavior = .automatic
         collectionView.allowsMultipleSelection = true
         
@@ -365,6 +371,10 @@ extension ViewController: UICollectionViewDataSource {
         if cell.titleLabel.text.isEmpty { cell.setTitleHidden() }
         cell.descLabel.text = notesModel[indexPath.item].description
         
+        if isSearching {
+            cell.searchText(text: searchBar.text)
+        }
+        
         cell.backgroundColor = NoteColors.getColor(name: notesModel[indexPath.item].color)
         return cell
     }
@@ -395,6 +405,32 @@ extension ViewController: UICollectionViewDataSource {
             }
         }
         print("Notes in db: \(notesModel.count)")
+    }
+    
+    func reloadDataForQuery( query: String? )
+    {
+        guard let len = query?.count, len > 2 else {
+            isSearching = false
+            reloadData()
+            return
+        }
+        
+        isSearching = true
+        collectionView.performBatchUpdates() { [weak self] in
+            guard let self = self else { return }
+            
+            self.notesModel = database.search(query: query)
+            
+            if self.notesModel.count > 0 && self.collectionView.isHidden {
+                switchStackView(stack: stackViewCollection)
+            }
+            else if self.notesModel.count == 0 && !self.collectionView.isHidden
+            {
+                switchStackView(stack: stackViewCollection)
+            }
+
+        }
+        print("Notes by search '\(query)': \(notesModel.count)")
     }
 }
 
@@ -455,13 +491,50 @@ extension ViewController: UICollectionViewDelegate {
 
 extension ViewController: UICollectionViewDelegateFlowLayout {
 
+//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+//
+//        let paddingSpace = 20 * (itemsPerRow + 1)
+//        let availableWidth = view.frame.width - paddingSpace
+//        let widthPerItem = availableWidth / itemsPerRow
+//        let height = widthPerItem
+////        if( note.text > 100 ) height = 2 * width...
+//
+//        return CGSize(width: widthPerItem, height: height)
+//    }
+    
+    func calcWidthPerItem( preferWidth: CGFloat, preferPadding: CGFloat ) -> CGFloat {
+        var items = view.frame.width / ( preferWidth + preferPadding )
+        items = items.rounded(.down)
+        let width = (view.frame.width - preferPadding * (items+1)) / items
+
+        return width
+    }
+    
+    func calcHeightPerItem( width: CGFloat, text: String? ) -> CGFloat {
+        guard let text = text else {
+            return width * 0.5
+        }
+
+        let n = text.components(separatedBy:"\n").count - 1
+
+        let weigth = text.count + n * 14
+        
+        if weigth < 30 {    return width * 0.5  }
+        else if weigth > 80 {   return width * 1.5  }
+        
+
+        return width
+    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         
-        let paddingSpace = 20 * (itemsPerRow + 1)
-        let availableWidth = view.frame.width - paddingSpace
-        let widthPerItem = availableWidth / itemsPerRow
-        let height = widthPerItem
-//        if( note.text > 100 ) height = 2 * width...
+        
+//        if UIDevice.current.orientation.isLandscape {
+//
+//        }
+
+        let widthPerItem = calcWidthPerItem(preferWidth: preferWidthNoteItem, preferPadding: preferPaddingNoteItem)
+        let height = widthPerItem/*calcHeightPerItem(width: widthPerItem, text: notesModel[indexPath.item].description)*/
         
         return CGSize(width: widthPerItem, height: height)
     }
@@ -474,6 +547,19 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
         return 20
     }
 }
+
+//MARK: - UISearchBarDelegate
+extension ViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        
+        if let timer = timerSearchDelay {   timer.invalidate()  }
+        
+        timerSearchDelay = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { [weak self] _ in
+            self?.reloadDataForQuery(query: searchText)
+        }
+    }
+}
+
 
 //MARK: - Other
 

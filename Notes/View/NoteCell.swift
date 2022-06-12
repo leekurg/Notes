@@ -52,7 +52,7 @@ class NoteCell: UICollectionViewCell {
         }()
         
         super.init(frame: frame)
-        descLabel.textContainerInset = UIEdgeInsets(top: contentView.frame.size.height*0.2, left: 7, bottom: 5, right: 5)
+        descLabel.textContainerInset = UIEdgeInsets(top: 35, left: 7, bottom: 5, right: 5)
         
         
         backgroundColor = NoteColors.getColor(ename: .base)
@@ -68,7 +68,7 @@ class NoteCell: UICollectionViewCell {
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(5)
             make.leading.trailing.equalToSuperview().inset(7)
-            make.height.equalToSuperview().multipliedBy(0.2)
+            make.height.equalTo(35)
         }
 
         descLabel.snp.makeConstraints { make in
@@ -90,6 +90,13 @@ class NoteCell: UICollectionViewCell {
         self.backgroundColor = NoteColors.getColor(ename: .base)
         self.setSelected(selected: false)
     }
+    
+    func searchText( text: String? ) {
+        guard let text = text else {
+            return
+        }
+    }
+    
     
     func setBackgroundColor( color: CGColor? ) {
         guard let color = color else { return }
@@ -116,3 +123,13 @@ class NoteCell: UICollectionViewCell {
         }
     }
 }
+
+//public extension UITextView {
+//    var visibleRange: NSRange? {
+//        guard let start = closestPosition(to: contentOffset),
+//                let end = characterRange(at: CGPoint(x: contentOffset.x + bounds.maxX,
+//                                                   y: contentOffset.y + bounds.maxY))?.end
+//        else { return nil }
+//        return NSMakeRange(offset(from: beginningOfDocument, to: start), offset(from: start, to: end))
+//    }
+//}
