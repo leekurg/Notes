@@ -8,8 +8,8 @@
 import UIKit
 
 struct NoteColors {
-    enum Names: String {
-        case base = "base"
+    enum Names: String, CaseIterable {
+        case base = "default"
         case blue = "blue"
         case pink = "pink"
         case cream = "cream"

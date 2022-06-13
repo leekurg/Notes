@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 class ViewController: UIViewController {
     
@@ -142,15 +143,20 @@ class ViewController: UIViewController {
     private func setupCollectionView() {
         
         collectionView = UICollectionView(frame: view.frame, collectionViewLayout: UICollectionViewFlowLayout())
+        collectionView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         collectionView.delegate = self
         collectionView.dataSource = self
-        
+        collectionView.allowsMultipleSelection = true
         
         collectionView.register(NoteCell.self, forCellWithReuseIdentifier: NoteCell.reuseID)
+        collectionView.register(NoteSection.self,
+                                forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+                                withReuseIdentifier: NoteSection.reuseID)
         collectionView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
 //        collectionView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
 //        collectionView.contentInsetAdjustmentBehavior = .automatic
-        collectionView.allowsMultipleSelection = true
+        let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        layout.sectionInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
         
         let noContentView: UIView = {
             let view = UIView()
@@ -361,23 +367,44 @@ class ViewController: UIViewController {
 
     //MARK: - Data source
 extension ViewController: UICollectionViewDataSource {
+    
+    //section
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return notesModel.count
     }
+
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+        
+        let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: NoteSection.reuseID, for: indexPath) as! NoteSection
+        header.titleLabel.text = "SECTION"
+        
+        return header
+    }
     
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        return CGSize(width: view.frame.size.width, height: 40)
+    }
+    
+    //cell
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NoteCell.reuseID, for: indexPath) as! NoteCell
         cell.titleLabel.text = notesModel[indexPath.item].title
         if cell.titleLabel.text.isEmpty { cell.setTitleHidden() }
-        cell.descLabel.text = notesModel[indexPath.item].description
         
-        if isSearching {
-            cell.searchText(text: searchBar.text)
+        
+        if var text = notesModel[indexPath.item].description {
+            text = text.trimmingCharacters(in: .newlines)
+            cell.descLabel.text = text
         }
         
         cell.backgroundColor = NoteColors.getColor(name: notesModel[indexPath.item].color)
         return cell
     }
+    
     
     func reloadData( at index: IndexPath? = nil ) {
         
@@ -430,7 +457,7 @@ extension ViewController: UICollectionViewDataSource {
             }
 
         }
-        print("Notes by search '\(query)': \(notesModel.count)")
+        print("Notes by search '\(String(describing: query))': \(notesModel.count)")
     }
 }
 
@@ -554,7 +581,7 @@ extension ViewController: UISearchBarDelegate {
         
         if let timer = timerSearchDelay {   timer.invalidate()  }
         
-        timerSearchDelay = Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { [weak self] _ in
+        timerSearchDelay = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in
             self?.reloadDataForQuery(query: searchText)
         }
     }

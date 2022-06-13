@@ -16,6 +16,7 @@ class NoteEditViewController: UIViewController {
     private var titlePlaceholder: UILabel?
     private var descPlaceholder: UILabel?
     
+    private var buttonCategory: UIButton!
     private var buttonColor: UIButton!
     private var backView: UIView!
     
@@ -49,6 +50,18 @@ class NoteEditViewController: UIViewController {
         setupUI()
         
         print("Shown note id: ", model.id)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        if isNew {
+            let _ = titleTextView.becomeFirstResponder()
+        }
+        else {
+            let _ = descTextView.becomeFirstResponder()
+        }
+        
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -96,6 +109,27 @@ class NoteEditViewController: UIViewController {
             }()
             setButtonColorMark(color: NoteColors.getColorForName(name: model.color))
             
+            buttonCategory = {
+                var config  = UIButton.Configuration.filled()
+                
+                let smallImgConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .thin, scale: .small)
+                config.image = UIImage(systemName: "chevron.down" )?.withConfiguration(smallImgConfig).withTintColor( UIColor(white: 1, alpha: 0.7), renderingMode: .alwaysOriginal)
+                config.imagePlacement = .trailing
+                config.imagePadding = 5
+                config.background.backgroundColor = .clear
+                
+                let button = UIButton(configuration: config)
+                button.setTitle(model.category?.uppercased(), for: .normal)
+                button.layer.borderWidth = 1
+                button.layer.borderColor = UIColor(white: 1, alpha: 0.3).cgColor
+                button.layer.cornerRadius = 15
+                
+                button.menu = createCategoryMenu()
+                button.showsMenuAsPrimaryAction = true
+                
+                return button
+            }()
+            
             let buttonClose: UIButton = {
                 let button = UIButton()
                 let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .thin, scale: .large)
@@ -111,12 +145,19 @@ class NoteEditViewController: UIViewController {
             }()
             
             view.addSubview(buttonColor)
+            view.addSubview(buttonCategory)
             view.addSubview(buttonClose)
             
             buttonColor.snp.makeConstraints { make in
                 make.centerY.equalToSuperview()
                 make.leading.equalToSuperview().inset(15)
                 make.width.height.equalTo(30)
+            }
+            
+            buttonCategory.snp.makeConstraints { make in
+                make.center.equalToSuperview()
+                make.width.equalTo(150)
+                make.height.equalTo(30)
             }
             
             buttonClose.snp.makeConstraints { make in
@@ -135,6 +176,8 @@ class NoteEditViewController: UIViewController {
             view.backgroundColor = .clear
             view.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 10, right: 45)
             view.text = model?.title ?? nil
+            view.isScrollEnabled = false;
+            view.textContainer.maximumNumberOfLines = 1;
             
 
             titlePlaceholder = {
@@ -236,16 +279,33 @@ class NoteEditViewController: UIViewController {
             return act
         }
         
-        let actions: [UIAction] = [
-            createAction(title: "Default", colorName: .base),
-            createAction(title: "Blue", colorName: .blue),
-            createAction(title: "Pink", colorName: .pink),
-            createAction(title: "Cream", colorName: .cream),
-            createAction(title: "Green", colorName: .green),
-            createAction(title: "Purple", colorName: .purple)
-        ]
+        var actions: [UIAction] = []
+        for color in NoteColors.Names.allCases {
+            actions.append( createAction(title: color.rawValue.capitalized, colorName: color))
+        }
             
         return UIMenu(title: "Colors", options: .displayInline, children: actions)
+    }
+    
+    private func createCategoryMenu() -> UIMenu {
+            
+        func createAction( title: String, categoryName: NoteCategory) -> UIAction
+        {
+            let act = UIAction(title: title,
+                               image: UIImage(systemName: "folder.fill" )?.withTintColor(.orange, renderingMode: .alwaysOriginal)) { [weak self] _ in
+                self?.didCategoryMenuItemPicked(category: categoryName)
+            }
+            
+            return act
+        }
+        
+        var actions: [UIAction] = []
+        for category in NoteCategory.allCases {
+            if category == .pinned { continue }
+            actions.append( createAction(title: category.rawValue.capitalized, categoryName: category))
+        }
+            
+        return UIMenu(title: "Categories", options: .displayInline, children: actions)
     }
     
     //MARK: Action
@@ -258,6 +318,14 @@ class NoteEditViewController: UIViewController {
 
         backView.backgroundColor = NoteColors.getBlurColor(ename: color)
         setButtonColorMark(color: color)
+        
+        isEdited = true
+    }
+    
+    private func didCategoryMenuItemPicked( category: NoteCategory ) {
+        model.category = category.rawValue
+        
+        buttonCategory.setTitle(category.rawValue.uppercased(), for: .normal)
         
         isEdited = true
     }

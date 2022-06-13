@@ -14,6 +14,7 @@ struct NoteDataModel {
     var title: String?
     var description: String?
     var color: String?
+    var category: String?
 }
 
 extension NoteDataModel {
@@ -23,11 +24,13 @@ extension NoteDataModel {
         title = object.title
         description = object.desc
         color = object.color
+        category = object.category
     }
     
     init( id: Int ) {
         self.id = id
         timestamp = Date()
         color = NoteColors.Names.base.rawValue
+        category = NoteCategory.other.rawValue
     }
 }

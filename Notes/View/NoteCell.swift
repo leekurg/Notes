@@ -91,11 +91,11 @@ class NoteCell: UICollectionViewCell {
         self.setSelected(selected: false)
     }
     
-    func searchText( text: String? ) {
-        guard let text = text else {
-            return
-        }
-    }
+//    func searchText( text: String? ) {
+//        guard let text = text else {
+//            return
+//        }
+//    }
     
     
     func setBackgroundColor( color: CGColor? ) {

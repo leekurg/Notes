@@ -13,6 +13,7 @@ class NoteDataObject: Object {
     @objc dynamic var title = ""
     @objc dynamic var desc = ""
     @objc dynamic var color = ""
+    @objc dynamic var category = ""
     
     override class func primaryKey() -> String? {
             return "id"

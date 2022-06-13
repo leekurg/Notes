@@ -31,6 +31,7 @@ class Database {
             object.title = model.title ?? ""
             object.desc = model.description ?? ""
             object.color = model.color ?? ""
+            object.category = model.category ?? ""
                 
             realm.add(object)
         })
@@ -46,6 +47,7 @@ class Database {
                 object.title = model.title ?? ""
                 object.desc = model.description ?? ""
                 object.color = model.color ?? ""
+                object.category = model.category ?? ""
             })
         }
     }

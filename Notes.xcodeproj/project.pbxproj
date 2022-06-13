@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		090F42B628528DA20098C7FD /* BlurButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090F42B528528DA20098C7FD /* BlurButton.swift */; };
 		090F42B92853BF050098C7FD /* NoteColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090F42B82853BF050098C7FD /* NoteColors.swift */; };
+		091FEA482856A38F00808247 /* NoteSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091FEA472856A38F00808247 /* NoteSection.swift */; };
+		091FEA4A2857455E00808247 /* NoteCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 091FEA492857455E00808247 /* NoteCategory.swift */; };
 		0934CE2C284FD890003AC617 /* NoteDataObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0934CE2B284FD890003AC617 /* NoteDataObject.swift */; };
 		0934CE2E284FDD1D003AC617 /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0934CE2D284FDD1D003AC617 /* Database.swift */; };
 		096F7A75284CD6E9004C9983 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096F7A74284CD6E9004C9983 /* AppDelegate.swift */; };
@@ -27,6 +29,8 @@
 		0353126D0C1D757F865834C7 /* Pods_Notes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Notes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		090F42B528528DA20098C7FD /* BlurButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlurButton.swift; sourceTree = "<group>"; };
 		090F42B82853BF050098C7FD /* NoteColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteColors.swift; sourceTree = "<group>"; };
+		091FEA472856A38F00808247 /* NoteSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteSection.swift; sourceTree = "<group>"; };
+		091FEA492857455E00808247 /* NoteCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteCategory.swift; sourceTree = "<group>"; };
 		0934CE2B284FD890003AC617 /* NoteDataObject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDataObject.swift; sourceTree = "<group>"; };
 		0934CE2D284FDD1D003AC617 /* Database.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		096F7A71284CD6E9004C9983 /* Notes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Notes.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -97,6 +101,7 @@
 				096F7A7D284CD6EA004C9983 /* Assets.xcassets */,
 				096F7A7F284CD6EA004C9983 /* LaunchScreen.storyboard */,
 				096F7A82284CD6EA004C9983 /* Info.plist */,
+				091FEA492857455E00808247 /* NoteCategory.swift */,
 			);
 			path = Notes;
 			sourceTree = "<group>";
@@ -107,6 +112,7 @@
 				090F42B528528DA20098C7FD /* BlurButton.swift */,
 				096F7A8B284CD9AC004C9983 /* NoteCell.swift */,
 				096F7A90284D5810004C9983 /* NoteEditViewController.swift */,
+				091FEA472856A38F00808247 /* NoteSection.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -256,9 +262,11 @@
 				096F7A91284D5810004C9983 /* NoteEditViewController.swift in Sources */,
 				096F7A75284CD6E9004C9983 /* AppDelegate.swift in Sources */,
 				096F7A8C284CD9AC004C9983 /* NoteCell.swift in Sources */,
+				091FEA482856A38F00808247 /* NoteSection.swift in Sources */,
 				090F42B628528DA20098C7FD /* BlurButton.swift in Sources */,
 				0934CE2E284FDD1D003AC617 /* Database.swift in Sources */,
 				0934CE2C284FD890003AC617 /* NoteDataObject.swift in Sources */,
+				091FEA4A2857455E00808247 /* NoteCategory.swift in Sources */,
 				096F7A77284CD6E9004C9983 /* SceneDelegate.swift in Sources */,
 				090F42B92853BF050098C7FD /* NoteColors.swift in Sources */,
 			);
