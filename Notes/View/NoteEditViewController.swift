@@ -54,14 +54,7 @@ class NoteEditViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
-        if isNew {
-            let _ = titleTextView.becomeFirstResponder()
-        }
-        else {
-            let _ = descTextView.becomeFirstResponder()
-        }
-        
+        let _ = isNew ? titleTextView.becomeFirstResponder() : descTextView.becomeFirstResponder()
     }
     
     override func viewDidDisappear(_ animated: Bool) {

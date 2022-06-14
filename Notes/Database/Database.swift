@@ -52,20 +52,29 @@ class Database {
         }
     }
     
-    func read() -> [NoteDataModel] {
+    func read() -> NotesDataModel {
         let data = realm.objects( NoteDataObject.self )
         lastId = data.max(ofProperty: "id") as Int?
         
-        return data.map { NoteDataModel(object: $0) }
+        var model = NotesDataModel()
+        for item in data {
+            model.append(note: NoteDataModel(object: item))
+        }
+        
+        return model
     }
-    
-    func search( query: String? ) -> [NoteDataModel] {
+  
+    func search( query: String? ) -> NotesDataModel {
         guard let query = query else {
             return read()
         }
         
         let data = realm.objects( NoteDataObject.self ).filter("desc contains[c] %@ OR title contains[c] %@", query, query)
-        return data.map { NoteDataModel(object: $0) }
+        var model = NotesDataModel()
+        for item in data {
+            model.append(note: NoteDataModel(object: item))
+        }
+        return model
     }
     
     func remove( listId: [Int]) -> Bool {

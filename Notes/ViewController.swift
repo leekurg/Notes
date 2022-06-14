@@ -10,35 +10,7 @@ import SwiftUI
 
 class ViewController: UIViewController {
     
-    private var notesModel: [NoteDataModel] = []
-//    private var notesModel: [NoteDataModel] = [
-//        NoteDataModel(id: 1,
-//                      timestamp: Date(),
-//                      title: "Title 1",
-//                      description: "note 1",
-//                      color: UIColor(red: 224/255, green: 236/255, blue: 255/255, alpha: 1).cgColor ) ,
-//        NoteDataModel(id: 2,
-//                      timestamp: Date(),
-//                      title: "Views",
-//                      description: "Views can host other views. Embedding one view inside another creates a containment relationship between the host view (known as the superview) and the embedded view (known as the subview). View hierarchies make it easier to manage views.",
-//                      color: UIColor(red: 233/255, green: 245/255, blue: 223/255, alpha: 1).cgColor ),
-//
-//        NoteDataModel(id: 3,
-//                      timestamp: Date(),
-//                      title: "Building blocks",
-//                      description: "Views and controls are the visual building blocks of your app’s user interface. Use them to draw and organize your app’s content onscreen.",
-//                      color: UIColor(red: 240/255, green: 225/255, blue: 245/255, alpha: 1).cgColor ),
-//        NoteDataModel(id: 4,
-//                      timestamp: Date(),
-//                      title: "Title 4",
-//                      description: "note 4",
-//                      color: UIColor(red: 240/255, green: 227/255, blue: 209/255, alpha: 1 ).cgColor),
-//        NoteDataModel(id: 5,
-//                      timestamp: Date(),
-//                      title: "Title 5",
-//                      description: "note 5",
-//                      color: UIColor(red: 255/255, green: 200/255, blue: 200/255, alpha: 1 ).cgColor)
-//    ]
+    private var notesModel: NotesDataModel!
     
     private let preferWidthNoteItem: CGFloat = 160
     private let preferPaddingNoteItem: CGFloat = 20
@@ -52,7 +24,11 @@ class ViewController: UIViewController {
     private var toolBar: UIToolbar!
     private var buttonSuper: UIButton!
     
-    private var isSearching = false
+    private var isSearching = false {
+        didSet {
+            animateSuperButtonHide(hide: isSearching)
+        }
+    }
     private var lpgr: UILongPressGestureRecognizer!
     private var _IsSelectionMode = false
     private var isSelectionMode: Bool {
@@ -162,12 +138,12 @@ class ViewController: UIViewController {
             let view = UIView()
             
             let labelTitle = UILabel()
-            labelTitle.text = "No content yet"
+            labelTitle.text = "No content"
             labelTitle.textColor = .lightGray
             labelTitle.font = UIFont.systemFont(ofSize: 25, weight: .bold)
             
             let labelDesc = UILabel()
-            labelDesc.text = "No notes has been created yet"
+            labelDesc.text = "No content is matching your request"
             labelDesc.textColor = .lightGray
             
             view.addSubview(labelTitle)
@@ -265,7 +241,7 @@ class ViewController: UIViewController {
     
     private func deleteSelectedNotes() {
         let indexPaths = collectionView.indexPathsForSelectedItems
-        
+
         guard let indexPaths = indexPaths else {
             return
         }
@@ -273,8 +249,10 @@ class ViewController: UIViewController {
         let alert = UIAlertController(title: "Removing", message: "\(indexPaths.count) note(s) will be removerd. Are you sure?", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Remove", style: .destructive, handler: { [weak self] _ in
             guard let self = self else { return }
+
+            let listOptId = indexPaths.map { index in self.notesModel[index]?.id }
+            let listId = listOptId.compactMap { $0 }
             
-            let listId = indexPaths.map { index in self.notesModel[index.row].id }
             let success = database.remove(listId: listId)
             if !success {
                 self.showAlert(title: "Error", text: "Unable to delete from database")
@@ -282,15 +260,12 @@ class ViewController: UIViewController {
                 return
             }
 
-            self.collectionView!.performBatchUpdates({
-                self.reloadData()
-            }, completion: nil)
+            self.reloadData()
             
             self.isSelectionMode = false
         }))
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         self.present(alert, animated: true)
-        
         
     }
     
@@ -299,9 +274,8 @@ class ViewController: UIViewController {
     }
     
     @objc private func cancelSelectionDidTouched() {
-//        defer {
-            isSelectionMode = false
-//        }
+
+        isSelectionMode = false
         
         let selectedItems = collectionView.indexPathsForSelectedItems
         guard let selectedItems = selectedItems else {
@@ -339,6 +313,13 @@ class ViewController: UIViewController {
         )
     }
     
+    private func animateSuperButtonHide( hide: Bool ) {
+        UIView.transition(with: buttonSuper, duration: 0.5, options: .transitionCrossDissolve,
+                          animations: { self.buttonSuper.isHidden = hide },
+                          completion: nil
+        )
+    }
+    
     private func animateBarSwitch() {
         UIView.transition(with: searchBar, duration: 0.3, options: .transitionCrossDissolve,
                           animations: { [weak self] in self?.switchStackView(stack: self?.stackViewBar) },
@@ -370,18 +351,21 @@ extension ViewController: UICollectionViewDataSource {
     
     //section
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
+        return notesModel.sections.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return notesModel.count
+        if section < notesModel.sections.count {
+            return notesModel.sections[section].notes.count
+        }
+        return 0
     }
-
+    
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        
+
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: NoteSection.reuseID, for: indexPath) as! NoteSection
-        header.titleLabel.text = "SECTION"
-        
+        header.titleLabel.text = notesModel.sections[indexPath.section].name.capitalized + " (\(notesModel.sections[indexPath.section].notes.count))"
+
         return header
     }
     
@@ -392,45 +376,41 @@ extension ViewController: UICollectionViewDataSource {
     //cell
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NoteCell.reuseID, for: indexPath) as! NoteCell
-        cell.titleLabel.text = notesModel[indexPath.item].title
+        cell.titleLabel.text = notesModel[indexPath]?.title
+        
+//        print("Cell (\(cell.titleLabel.text)) at \(indexPath)")
+//        print("row \(indexPath.section)")
+//        print("item \(indexPath.item)")
+        
         if cell.titleLabel.text.isEmpty { cell.setTitleHidden() }
         
-        
-        if var text = notesModel[indexPath.item].description {
+        if var text = notesModel[indexPath]?.description {
             text = text.trimmingCharacters(in: .newlines)
             cell.descLabel.text = text
         }
         
-        cell.backgroundColor = NoteColors.getColor(name: notesModel[indexPath.item].color)
+        cell.backgroundColor = NoteColors.getColor(name: notesModel[indexPath]?.color)
         return cell
     }
     
     
-    func reloadData( at index: IndexPath? = nil ) {
+    func reloadData() {
         
-        collectionView.performBatchUpdates() { [weak self] in
-            guard let self = self else { return }
-            
-            self.notesModel = database.read()
-            
-            //init state: there is data, collection hidden
-            if self.notesModel.count > 0 && self.collectionView.isHidden {
-                switchStackView(stack: stackViewCollection)
-                searchBar.isHidden = false
-            }
-            //just deleted last note
-            else if self.notesModel.count == 0 && !self.collectionView.isHidden
-            {
-                switchStackView(stack: stackViewCollection)
-            }
-            
-            if let index = index {
-                self.collectionView.reloadItems(at: [index])
-            }
-            else {
-                self.collectionView.reloadData()
-            }
+        notesModel = database.read()
+        
+        //init state: there is data, collection hidden
+        if notesModel.count > 0 && collectionView.isHidden {
+            switchStackView(stack: stackViewCollection)
+            searchBar.isHidden = false
         }
+        //just deleted last note
+        else if notesModel.count == 0 && !collectionView.isHidden
+        {
+            switchStackView(stack: stackViewCollection)
+        }
+        
+        collectionView.reloadData()
+        
         print("Notes in db: \(notesModel.count)")
     }
     
@@ -443,20 +423,18 @@ extension ViewController: UICollectionViewDataSource {
         }
         
         isSearching = true
-        collectionView.performBatchUpdates() { [weak self] in
-            guard let self = self else { return }
-            
-            self.notesModel = database.search(query: query)
-            
-            if self.notesModel.count > 0 && self.collectionView.isHidden {
-                switchStackView(stack: stackViewCollection)
-            }
-            else if self.notesModel.count == 0 && !self.collectionView.isHidden
-            {
-                switchStackView(stack: stackViewCollection)
-            }
+        
+        notesModel = database.search(query: query)
 
+        if notesModel.count > 0 && self.collectionView.isHidden {
+            switchStackView(stack: stackViewCollection)
         }
+        else if self.notesModel.count == 0 && !self.collectionView.isHidden
+        {
+            switchStackView(stack: stackViewCollection)
+        }
+        
+        collectionView.reloadData()
         print("Notes by search '\(String(describing: query))': \(notesModel.count)")
     }
 }
@@ -481,9 +459,9 @@ extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         if let _ = collectionView.cellForItem(at: indexPath) as? NoteCell {
             if isSelectionMode == false {
-                let noteEditView = NoteEditViewController(model: notesModel[indexPath.item])
+                let noteEditView = NoteEditViewController(model: notesModel[indexPath])
                 noteEditView.informParentWhenDone = { [weak self] in
-                    self?.reloadData( at: indexPath )
+                    self?.reloadData()
                 }
                 present(noteEditView, animated: true)
                 return false
@@ -561,7 +539,7 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
 //        }
 
         let widthPerItem = calcWidthPerItem(preferWidth: preferWidthNoteItem, preferPadding: preferPaddingNoteItem)
-        let height = widthPerItem/*calcHeightPerItem(width: widthPerItem, text: notesModel[indexPath.item].description)*/
+        let height = widthPerItem /*calcHeightPerItem(width: widthPerItem, text: notesModelWithCat.notes[indexPath.item].description)*/
         
         return CGSize(width: widthPerItem, height: height)
     }
