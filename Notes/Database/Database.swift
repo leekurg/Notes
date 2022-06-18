@@ -52,10 +52,30 @@ class Database {
         }
     }
     
+    func updatePin(listId: [Int]) {
+        let objects = realm.objects( NoteDataObject.self ).filter("id IN %@", listId)
+        
+        func bool( from n: Int? ) -> Bool? {
+            guard let n = n else { return nil }
+            if n > 0 { return true }
+            return false
+        }
+        
+        try! realm.write({
+            for object in objects {
+                let value = bool(from: object.value(forKey: "pinned") as? Int )
+                if let pinned = value {
+                    object.setValue( !pinned, forKey: "pinned")
+                }
+            }
+        })
+    }
+    
     func read( query: String? = nil ) -> NotesDataModel {
         
         var data = realm.objects( NoteDataObject.self )
-            
+        lastId = data.max(ofProperty: "id") as Int?
+        
         if let query = query {
             data = data.filter("desc contains[c] %@ OR title contains[c] %@", query, query)
         }

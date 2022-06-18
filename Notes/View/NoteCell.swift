@@ -13,6 +13,7 @@ class NoteCell: UICollectionViewCell {
     
     let titleLabel: UITextView!
     let descLabel: UITextView!
+    let pinMark: UIImageView!
     let selectMark: UIImageView!
     
     override init(frame: CGRect) {
@@ -51,6 +52,13 @@ class NoteCell: UICollectionViewCell {
             return view
         }()
         
+        pinMark = {
+            let view = UIImageView()
+            view.image = UIImage(systemName: "pin")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .thin, scale: .small))
+            view.alpha = 0
+            return view
+        }()
+        
         super.init(frame: frame)
         descLabel.textContainerInset = UIEdgeInsets(top: 35, left: 7, bottom: 5, right: 5)
         
@@ -64,6 +72,7 @@ class NoteCell: UICollectionViewCell {
         contentView.addSubview(titleLabel)
         contentView.addSubview(descLabel)
         contentView.addSubview(selectMark)
+        contentView.addSubview(pinMark)
         
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(5)
@@ -78,6 +87,10 @@ class NoteCell: UICollectionViewCell {
         selectMark.snp.makeConstraints { make in
             make.bottom.right.equalToSuperview().inset(7)
         }
+        
+        pinMark.snp.makeConstraints { make in
+            make.top.right.equalToSuperview().inset(5)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -88,16 +101,10 @@ class NoteCell: UICollectionViewCell {
         self.titleLabel.text = ""
         self.descLabel.text = ""
         self.backgroundColor = NoteColors.getColor(ename: .base)
+        self.pinMark.alpha = 0
         self.setSelected(selected: false)
     }
-    
-//    func searchText( text: String? ) {
-//        guard let text = text else {
-//            return
-//        }
-//    }
-    
-    
+
     func setBackgroundColor( color: CGColor? ) {
         guard let color = color else { return }
         

@@ -77,13 +77,14 @@ class ViewController: UIViewController {
     }
     
     private func setToolBarSelect() {
-        let buttonSelect: UIButton = {
+        let buttonPin: UIButton = {
             let button = UIButton(type: .system)
-            button.setTitle( "Select all", for: .normal)
+            button.setTitle( "Pin", for: .normal)
+            button.setImage(UIImage(systemName: "pin.fill" )?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 17, weight: .light, scale: .medium)), for: .normal)
             return button
         }()
-        buttonSelect.addTarget(self, action: #selector(selectAllDidTouched), for: .touchUpInside)
-        navigationItem.setLeftBarButtonItems([UIBarButtonItem(customView: buttonSelect)], animated: true)
+        buttonPin.addTarget(self, action: #selector(pinDidTouched), for: .touchUpInside)
+        navigationItem.setLeftBarButtonItems([UIBarButtonItem(customView: buttonPin)], animated: true)
         
         navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelSelectionDidTouched)), animated: true)
     }
@@ -242,8 +243,19 @@ class ViewController: UIViewController {
         
     }
     
-    @objc private func selectAllDidTouched() {
-        print(#function)    //TODO
+    @objc private func pinDidTouched() {
+        let indexPaths = collectionView.indexPathsForSelectedItems
+
+        guard let indexPaths = indexPaths else {
+            return
+        }
+        
+        let listOptId = indexPaths.map { index in self.notesModel[index]?.id }
+        let listId = listOptId.compactMap { $0 }
+        
+        database.updatePin(listId: listId)
+        reloadData()
+        isSelectionMode = false
     }
     
     @objc private func cancelSelectionDidTouched() {
@@ -328,14 +340,18 @@ extension ViewController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-
+        
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: NoteSection.reuseID, for: indexPath) as! NoteSection
+        
         header.titleLabel.text = notesModel.sections[indexPath.section].name.capitalized + " (\(notesModel.sections[indexPath.section].notes.count))"
-
         return header
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        if notesModel.sections[section].name == NoteCategory.pinned.rawValue {
+            return CGSize(width: view.frame.size.width, height: 0)
+        }
+        
         return CGSize(width: view.frame.size.width, height: 40)
     }
     
@@ -349,6 +365,10 @@ extension ViewController: UICollectionViewDataSource {
         if var text = notesModel[indexPath]?.description {
             text = text.trimmingCharacters(in: .newlines)
             cell.descLabel.text = text
+        }
+        
+        if let pinned = notesModel[indexPath]?.pinned, pinned == true {
+            cell.pinMark.alpha = 1
         }
         
         cell.backgroundColor = NoteColors.getColor(name: notesModel[indexPath]?.color)

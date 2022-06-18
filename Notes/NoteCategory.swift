@@ -8,8 +8,8 @@
 //import Foundation
 
 enum NoteCategory: String, CaseIterable {
+case pinned = "pinned"
 case other = "other"
 case pesonal = "personal"
 case work = "work"
-case pinned = "pinned"
 }

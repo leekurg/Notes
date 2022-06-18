@@ -40,6 +40,18 @@ struct NotesDataModel {
             return
         }
         
+        //pinned
+        if note.pinned == true {
+            if let index = getIndexForSectionName(section: NoteCategory.pinned.rawValue) {
+                sections[index].notes.append(note)
+            }
+            else {
+                sections.insert(SectionDataModel(name: NoteCategory.pinned.rawValue, notes: [note]), at: 0)
+            }
+            return
+        }
+        
+        //other categories
         if let index = getIndexForSectionName(section: note.category) {
             sections[index].notes.append(note)
         }
@@ -74,6 +86,7 @@ struct NoteDataModel {
     var description: String?
     var color: String?
     var category: String?
+    var pinned: Bool
 }
 
 extension NoteDataModel {
@@ -84,6 +97,7 @@ extension NoteDataModel {
         description = object.desc
         color = object.color
         category = object.category
+        pinned = object.pinned
     }
     
     init( id: Int ) {
@@ -91,5 +105,6 @@ extension NoteDataModel {
         timestamp = Date()
         color = NoteColors.Names.base.rawValue
         category = NoteCategory.other.rawValue
+        pinned = false
     }
 }

@@ -14,6 +14,7 @@ class NoteDataObject: Object {
     @objc dynamic var desc = ""
     @objc dynamic var color = ""
     @objc dynamic var category = ""
+    @objc dynamic var pinned = false
     
     override class func primaryKey() -> String? {
             return "id"
