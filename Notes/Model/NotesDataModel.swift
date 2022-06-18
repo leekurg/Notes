@@ -17,6 +17,16 @@ struct NotesDataModel {
         }
     }
     
+    var allCount: Int {
+        get {
+            var c = 0
+            for s in sections {
+                c += s.notes.count
+            }
+            return c
+        }
+    }
+    
     subscript(indexPath: IndexPath) -> NoteDataModel? {
         guard indexPath.section < sections.count,
                 indexPath.item < sections[indexPath.section].notes.count

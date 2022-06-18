@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SwiftUI
 
 class ViewController: UIViewController {
     
@@ -18,10 +17,8 @@ class ViewController: UIViewController {
     private var timerSearchDelay: Timer?
     
     private var collectionView: UICollectionView!
-    private var stackViewBar: UIStackView!
     private var stackViewCollection: UIStackView!
-    private var searchBar: UISearchBar!
-    private var toolBar: UIToolbar!
+    private var searchController = UISearchController(searchResultsController: nil)
     private var buttonSuper: UIButton!
     
     private var isSearching = false {
@@ -35,13 +32,13 @@ class ViewController: UIViewController {
         set {
             _IsSelectionMode = newValue
             if _IsSelectionMode {
-                let color = #colorLiteral(red: 1, green: 0.7351920009, blue: 0.7335172296, alpha: 1)
-                animateCollectionTransition(toColor: color)
+                animateCollectionTransition(toColor: UIColor(red: 1, green: 0.73, blue: 0.73, alpha: 0.3))
+                setToolBarSelect()
             }
             else {
                 animateCollectionTransition(toColor: .white)
+                setToolBarSearch()
             }
-            animateBarSwitch()
             animateSuperButtonTransition(forward: _IsSelectionMode)
         }
         get {
@@ -67,53 +64,28 @@ class ViewController: UIViewController {
     
     //MARK: - Setup UI
     private func setupToolBar() {
-        searchBar = UISearchBar()
-        searchBar.delegate = self
+        navigationItem.title = "Notes"
+        navigationItem.searchController = searchController
+        searchController.searchBar.delegate = self
         
-        toolBar = UIToolbar()
-        var items = [UIBarButtonItem]()
+        setToolBarSearch()
+    }
+    
+    private func setToolBarSearch() {
+        navigationItem.setLeftBarButton(nil, animated: true)
+        navigationItem.setRightBarButton(nil, animated: true)
+    }
+    
+    private func setToolBarSelect() {
         let buttonSelect: UIButton = {
             let button = UIButton(type: .system)
             button.setTitle( "Select all", for: .normal)
             return button
         }()
         buttonSelect.addTarget(self, action: #selector(selectAllDidTouched), for: .touchUpInside)
+        navigationItem.setLeftBarButtonItems([UIBarButtonItem(customView: buttonSelect)], animated: true)
         
-        let labelSelect: UILabel = {
-            let label = UILabel()
-            label.text = "Select notes"
-            label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-            return label
-        }()
-        items.append(
-            UIBarButtonItem(customView: buttonSelect)
-        )
-        items.append(
-            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-        )
-        items.append(
-            UIBarButtonItem(customView: labelSelect)
-        )
-        items.append(
-            UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
-        )
-        items.append(
-            UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelSelectionDidTouched))
-        )
-        toolBar.setItems(items, animated: true)
-        
-        stackViewBar = UIStackView(arrangedSubviews: [toolBar, searchBar])
-        stackViewBar.axis = .vertical
-        
-        view.addSubview(stackViewBar)
-        
-        stackViewBar.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top)
-            make.leading.trailing.equalToSuperview()
-        }
-        
-        searchBar.isHidden = true
-        toolBar.isHidden = true
+        navigationItem.setRightBarButton(UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancelSelectionDidTouched)), animated: true)
     }
     
     private func setupCollectionView() {
@@ -168,8 +140,7 @@ class ViewController: UIViewController {
         view.addSubview(stackViewCollection)
         
         stackViewCollection.snp.makeConstraints { make in
-            make.top.equalTo(self.stackViewBar.snp.bottom)
-            make.bottom.leading.trailing.equalToSuperview()
+            make.edges.equalToSuperview()
         }
         
         collectionView.isHidden = true
@@ -216,6 +187,8 @@ class ViewController: UIViewController {
             return
         }
 
+        if searchController.isActive { return }
+        
         let p = gesture.location(in: self.collectionView)
 
         if let indexPath = self.collectionView.indexPathForItem(at: p) {
@@ -320,13 +293,6 @@ class ViewController: UIViewController {
         )
     }
     
-    private func animateBarSwitch() {
-        UIView.transition(with: searchBar, duration: 0.3, options: .transitionCrossDissolve,
-                          animations: { [weak self] in self?.switchStackView(stack: self?.stackViewBar) },
-                          completion: nil
-        )
-    }
-    
     private func animateButtonPressed( button: UIButton ) {
 
             button.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
@@ -378,10 +344,6 @@ extension ViewController: UICollectionViewDataSource {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: NoteCell.reuseID, for: indexPath) as! NoteCell
         cell.titleLabel.text = notesModel[indexPath]?.title
         
-//        print("Cell (\(cell.titleLabel.text)) at \(indexPath)")
-//        print("row \(indexPath.section)")
-//        print("item \(indexPath.item)")
-        
         if cell.titleLabel.text.isEmpty { cell.setTitleHidden() }
         
         if var text = notesModel[indexPath]?.description {
@@ -393,38 +355,16 @@ extension ViewController: UICollectionViewDataSource {
         return cell
     }
     
-    
-    func reloadData() {
-        
-        notesModel = database.read()
-        
-        //init state: there is data, collection hidden
-        if notesModel.count > 0 && collectionView.isHidden {
-            switchStackView(stack: stackViewCollection)
-            searchBar.isHidden = false
-        }
-        //just deleted last note
-        else if notesModel.count == 0 && !collectionView.isHidden
-        {
-            switchStackView(stack: stackViewCollection)
-        }
-        
-        collectionView.reloadData()
-        
-        print("Notes in db: \(notesModel.count)")
-    }
-    
-    func reloadDataForQuery( query: String? )
+    func reloadData( query: String? = nil )
     {
-        guard let len = query?.count, len > 2 else {
-            isSearching = false
-            reloadData()
-            return
+        if let len = query?.count, len > 2 {
+            isSearching = true
         }
-        
-        isSearching = true
-        
-        notesModel = database.search(query: query)
+        else {
+            isSearching = false
+        }
+
+        notesModel = isSearching ? database.read(query: query) : database.read()
 
         if notesModel.count > 0 && self.collectionView.isHidden {
             switchStackView(stack: stackViewCollection)
@@ -433,9 +373,9 @@ extension ViewController: UICollectionViewDataSource {
         {
             switchStackView(stack: stackViewCollection)
         }
-        
+
         collectionView.reloadData()
-        print("Notes by search '\(String(describing: query))': \(notesModel.count)")
+        print("Notes shown: \(notesModel.allCount)")
     }
 }
 
@@ -461,7 +401,7 @@ extension ViewController: UICollectionViewDelegate {
             if isSelectionMode == false {
                 let noteEditView = NoteEditViewController(model: notesModel[indexPath])
                 noteEditView.informParentWhenDone = { [weak self] in
-                    self?.reloadData()
+                    self?.reloadData(query: self?.searchController.searchBar.text)
                 }
                 present(noteEditView, animated: true)
                 return false
@@ -560,8 +500,19 @@ extension ViewController: UISearchBarDelegate {
         if let timer = timerSearchDelay {   timer.invalidate()  }
         
         timerSearchDelay = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { [weak self] _ in
-            self?.reloadDataForQuery(query: searchText)
+            self?.reloadData(query: searchText)
         }
+    }
+    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        if isSelectionMode {
+            cancelSelectionDidTouched()
+        }
+        return true
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        reloadData()
     }
 }
 

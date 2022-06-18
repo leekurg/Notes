@@ -21,6 +21,7 @@ class NoteEditViewController: UIViewController {
     private var backView: UIView!
     
     private var model: NoteDataModel!
+    private var oldText: (title: String?, desc: String?)!
     private var isNew = false
     private var isEdited = false
     
@@ -36,6 +37,9 @@ class NoteEditViewController: UIViewController {
         else {
             model = _model
         }
+        
+        oldText = (title: model.title, desc: model.description)
+        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -332,7 +336,17 @@ class NoteEditViewController: UIViewController {
 //MARK: - TextView Delegate
 extension NoteEditViewController: UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
-        self.isEdited = true
+        switch(textView) {
+        case titleTextView:
+            if titleTextView.text != oldText.title {
+                self.isEdited = true
+            }
+        case descTextView:
+            if descTextView.text != oldText.desc {
+                self.isEdited = true
+            }
+        default: return
+        }
     }
     
     func textViewDidChange(_ textView: UITextView) {
