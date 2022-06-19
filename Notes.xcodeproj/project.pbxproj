@@ -24,6 +24,7 @@
 		096F7A8C284CD9AC004C9983 /* NoteCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096F7A8B284CD9AC004C9983 /* NoteCell.swift */; };
 		096F7A91284D5810004C9983 /* NoteEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096F7A90284D5810004C9983 /* NoteEditViewController.swift */; };
 		C619C79E285FC9A3001803D7 /* Orientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C619C79D285FC9A3001803D7 /* Orientation.swift */; };
+		C619C7A0285FCBED001803D7 /* NoteEditControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C619C79F285FCBED001803D7 /* NoteEditControlPanel.swift */; };
 		DFF670E68D79EE65D741EA6A /* Pods_Notes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0353126D0C1D757F865834C7 /* Pods_Notes.framework */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +51,7 @@
 		227079B97D73C8CF7250A79B /* Pods-Notes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Notes.release.xcconfig"; path = "Target Support Files/Pods-Notes/Pods-Notes.release.xcconfig"; sourceTree = "<group>"; };
 		3EF4187404B262E72A1E1166 /* Pods-Notes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Notes.debug.xcconfig"; path = "Target Support Files/Pods-Notes/Pods-Notes.debug.xcconfig"; sourceTree = "<group>"; };
 		C619C79D285FC9A3001803D7 /* Orientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orientation.swift; sourceTree = "<group>"; };
+		C619C79F285FCBED001803D7 /* NoteEditControlPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteEditControlPanel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 				090F42B528528DA20098C7FD /* BlurButton.swift */,
 				096F7A8B284CD9AC004C9983 /* NoteCell.swift */,
 				096F7A90284D5810004C9983 /* NoteEditViewController.swift */,
+				C619C79F285FCBED001803D7 /* NoteEditControlPanel.swift */,
 				091FEA472856A38F00808247 /* NoteSection.swift */,
 				091FEA4B2857DDDF00808247 /* ViewControllerUIBuilder.swift */,
 			);
@@ -281,6 +284,7 @@
 				090F42B628528DA20098C7FD /* BlurButton.swift in Sources */,
 				0934CE2E284FDD1D003AC617 /* Database.swift in Sources */,
 				0934CE2C284FD890003AC617 /* NoteDataObject.swift in Sources */,
+				C619C7A0285FCBED001803D7 /* NoteEditControlPanel.swift in Sources */,
 				C619C79E285FC9A3001803D7 /* Orientation.swift in Sources */,
 				091FEA4A2857455E00808247 /* NoteCategory.swift in Sources */,
 				096F7A77284CD6E9004C9983 /* SceneDelegate.swift in Sources */,

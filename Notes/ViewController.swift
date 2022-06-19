@@ -468,7 +468,7 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
     func calcWidthPerItem( preferWidth: CGFloat, preferPadding: CGFloat ) -> CGFloat {
         var items = view.frame.width / ( preferWidth + preferPadding )
         items = items.rounded(.down)
-        let sideInset: CGFloat = UIDevice.current.orientation.isPortrait ? preferPaddingNIPortrait : preferPaddingNILandscape
+        let sideInset: CGFloat = Orientation.isPortrait ? preferPaddingNIPortrait : preferPaddingNILandscape
         let width = (view.frame.width - preferPadding * (items-1) - 2 * sideInset) / items
 
         return width
