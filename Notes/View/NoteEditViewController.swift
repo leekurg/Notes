@@ -18,12 +18,12 @@ class NoteEditViewController: UIViewController {
     
     private var buttonCategory: UIButton!
     private var buttonColor: UIButton!
+    private var buttonPin: UIButton!
     private var backView: UIView!
     
     private var model: NoteDataModel!
-    private var oldText: (title: String?, desc: String?)!
+    private var oldModel : NoteDataModel!
     private var isNew = false
-    private var isEdited = false
     
     var informParentWhenDone: (() -> Void)?
     
@@ -38,7 +38,7 @@ class NoteEditViewController: UIViewController {
             model = _model
         }
         
-        oldText = (title: model.title, desc: model.description)
+        oldModel = model
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -64,16 +64,18 @@ class NoteEditViewController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
-        guard isEdited else { return }
-        
-        if isNew && titleTextView.text.isEmpty && descTextView.text.isEmpty { return }
+        if model == oldModel { return }
+        if isNew,
+           model.title == nil || model.title!.isEmpty,
+           model.description == nil || model.description!.isEmpty
+        {
+            return
+        }
         
         model.timestamp = Date()
-        model.title = titleTextView.text
-        model.description = descTextView.text
         
         isNew ? database.write(model) : database.update(model)
-        
+
         if let inform = informParentWhenDone {
             inform()
         }
@@ -105,6 +107,15 @@ class NoteEditViewController: UIViewController {
                 return button
             }()
             setButtonColorMark(color: NoteColors.getColorForName(name: model.color))
+            
+            buttonPin = {
+                let button = UIButton()
+                button.layer.borderWidth = 1
+                button.layer.borderColor = UIColor(white: 1, alpha: 0.5).cgColor
+                button.layer.cornerRadius = 15
+                button.addTarget(self, action: #selector(didButtonPinTouched), for: .touchUpInside)
+                return button
+            }()
             
             buttonCategory = {
                 var config  = UIButton.Configuration.filled()
@@ -142,12 +153,19 @@ class NoteEditViewController: UIViewController {
             }()
             
             view.addSubview(buttonColor)
+            view.addSubview(buttonPin)
             view.addSubview(buttonCategory)
             view.addSubview(buttonClose)
             
             buttonColor.snp.makeConstraints { make in
                 make.centerY.equalToSuperview()
                 make.leading.equalToSuperview().inset(15)
+                make.width.height.equalTo(30)
+            }
+            
+            buttonPin.snp.makeConstraints { make in
+                make.centerY.equalToSuperview()
+                make.leading.equalTo(buttonColor.snp.trailing).offset(10)
                 make.width.height.equalTo(30)
             }
             
@@ -162,6 +180,8 @@ class NoteEditViewController: UIViewController {
                 make.trailing.equalToSuperview().inset(15)
                 make.width.height.equalTo(30)
             }
+            
+            setButtonPinImage()
             
             return view
         }()
@@ -310,26 +330,33 @@ class NoteEditViewController: UIViewController {
         self.dismiss(animated: true)
     }
     
+    @objc private func didButtonPinTouched() {
+        model.pinned = !model.pinned
+        setButtonPinImage()
+    }
+
     private func didColorMenuItemPicked( color: NoteColors.Names ) {
         model.color = color.rawValue
-
         backView.backgroundColor = NoteColors.getBlurColor(ename: color)
         setButtonColorMark(color: color)
-        
-        isEdited = true
     }
     
     private func didCategoryMenuItemPicked( category: NoteCategory ) {
         model.category = category.rawValue
-        
         buttonCategory.setTitle(category.rawValue.uppercased(), for: .normal)
-        
-        isEdited = true
     }
+    
     
     private func setButtonColorMark( color: NoteColors.Names ) {
         let colorMark = NoteColors.getMarkColor(ename: color)
         buttonColor.setImage(UIImage(systemName: "circle.fill" )?.withTintColor(colorMark, renderingMode: .alwaysOriginal), for: .normal)
+    }
+    
+    private func setButtonPinImage() {
+        UIView.transition(with: buttonPin, duration: 0.5, options: .transitionCrossDissolve,
+                          animations: { self.buttonPin.setImage(UIImage(systemName: self.model.pinned ? "pin.fill" : "pin" )?.withTintColor(UIColor(white: 1, alpha: 0.7), renderingMode: .alwaysOriginal), for: .normal) },
+                          completion: nil
+        )
     }
 }
 
@@ -337,14 +364,8 @@ class NoteEditViewController: UIViewController {
 extension NoteEditViewController: UITextViewDelegate {
     func textViewDidEndEditing(_ textView: UITextView) {
         switch(textView) {
-        case titleTextView:
-            if titleTextView.text != oldText.title {
-                self.isEdited = true
-            }
-        case descTextView:
-            if descTextView.text != oldText.desc {
-                self.isEdited = true
-            }
+        case titleTextView: model.title = titleTextView.text
+        case descTextView:  model.description = descTextView.text
         default: return
         }
     }

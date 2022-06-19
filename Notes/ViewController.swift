@@ -11,8 +11,9 @@ class ViewController: UIViewController {
     
     private var notesModel: NotesDataModel!
     
-    private let preferWidthNoteItem: CGFloat = 160
-    private let preferPaddingNoteItem: CGFloat = 20
+    private let preferWidthNI: CGFloat = 160
+    private let preferPaddingNIPortrait: CGFloat = 20
+    private let preferPaddingNILandscape: CGFloat = 50
     
     private var timerSearchDelay: Timer?
     
@@ -101,9 +102,6 @@ class ViewController: UIViewController {
         collectionView.register(NoteSection.self,
                                 forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
                                 withReuseIdentifier: NoteSection.reuseID)
-        collectionView.layoutMargins = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-//        collectionView.layoutMargins = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
-//        collectionView.contentInsetAdjustmentBehavior = .automatic
         let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         layout.sectionInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
         
@@ -470,7 +468,8 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
     func calcWidthPerItem( preferWidth: CGFloat, preferPadding: CGFloat ) -> CGFloat {
         var items = view.frame.width / ( preferWidth + preferPadding )
         items = items.rounded(.down)
-        let width = (view.frame.width - preferPadding * (items+1)) / items
+        let sideInset: CGFloat = UIDevice.current.orientation.isPortrait ? preferPaddingNIPortrait : preferPaddingNILandscape
+        let width = (view.frame.width - preferPadding * (items-1) - 2 * sideInset) / items
 
         return width
     }
@@ -492,24 +491,20 @@ extension ViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        
-//        if UIDevice.current.orientation.isLandscape {
-//
-//        }
 
-        let widthPerItem = calcWidthPerItem(preferWidth: preferWidthNoteItem, preferPadding: preferPaddingNoteItem)
+        let widthPerItem = calcWidthPerItem(preferWidth: preferWidthNI, preferPadding: preferPaddingNIPortrait)
         let height = widthPerItem /*calcHeightPerItem(width: widthPerItem, text: notesModelWithCat.notes[indexPath.item].description)*/
         
         return CGSize(width: widthPerItem, height: height)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
-        return UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
+        let sideInset = Orientation.isPortrait ? preferPaddingNIPortrait : preferPaddingNILandscape
+        return UIEdgeInsets(top: 20, left: sideInset, bottom: 20, right: sideInset)
     }
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 20
+        return preferPaddingNIPortrait
     }
 }
 

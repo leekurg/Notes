@@ -48,6 +48,7 @@ class Database {
                 object.desc = model.description ?? ""
                 object.color = model.color ?? ""
                 object.category = model.category ?? ""
+                object.pinned = model.pinned
             })
         }
     }

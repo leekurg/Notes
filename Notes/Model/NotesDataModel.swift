@@ -79,7 +79,7 @@ struct SectionDataModel {
     var notes: [NoteDataModel] = []
 }
 
-struct NoteDataModel {
+struct NoteDataModel: Equatable {
     var id: Int
     var timestamp: Date
     var title: String?
