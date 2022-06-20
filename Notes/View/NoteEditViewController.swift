@@ -11,14 +11,7 @@ import SnapKit
 class NoteEditViewController: UIViewController {
     
     private var controlPanel: NoteEditControlPanel!
-    private var titleTextView: UITextView!
-    private var descTextView: UITextView!
-    private var titlePlaceholder: UILabel?
-    private var descPlaceholder: UILabel?
-    
-    private var buttonCategory: UIButton!
-    private var buttonColor: UIButton!
-    private var buttonPin: UIButton!
+    private var textPanel: NoteEditTextPanel!
     private var backView: UIView!
     
     private var model: NoteDataModel!
@@ -58,11 +51,14 @@ class NoteEditViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        let _ = isNew ? titleTextView.becomeFirstResponder() : descTextView.becomeFirstResponder()
+        textPanel.setFirstResponder()
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        
+        model.title = textPanel.title
+        model.description = textPanel.desc
         
         if model == oldModel { return }
         if isNew,
@@ -92,86 +88,15 @@ class NoteEditViewController: UIViewController {
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
         controlPanel = NoteEditControlPanel()
-        controlPanel.delegate = self
         controlPanel.configure(model: model)
+        controlPanel.delegate = self
         
-        
-        titleTextView = {
-            let view = UITextView()
-            view.delegate = self
-            view.font = UIFont.systemFont(ofSize: 24, weight: .bold)
-            view.backgroundColor = .clear
-            view.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 10, right: 45)
-            view.text = model?.title ?? nil
-            view.isScrollEnabled = false;
-            view.textContainer.maximumNumberOfLines = 1;
-            
-
-            titlePlaceholder = {
-                let label = UILabel()
-                label.text = "Enter title..."
-                label.font = .italicSystemFont(ofSize: (view.font?.pointSize)!)
-                view.addSubview(label)
-                label.textColor = .gray
-                label.isHidden = !view.text.isEmpty
-                
-                label.snp.makeConstraints { make in
-                    make.leading.equalToSuperview().inset( view.textContainerInset.left + 5 )
-                    make.centerY.equalToSuperview()
-                }
-                return label
-            }()
-            
-            return view
-        }()
-        
-        descTextView = {
-            let view = UITextView()
-            view.delegate = self
-            view.font = UIFont.systemFont(ofSize: 20, weight: .regular)
-            view.backgroundColor = .clear
-            view.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
-            view.text = model?.description ?? nil
-            
-            descPlaceholder = {
-                let label = UILabel()
-                label.text = "Enter text..."
-                label.font = .italicSystemFont(ofSize: (view.font?.pointSize)!)
-                view.addSubview(label)
-                label.textColor = .gray
-                label.isHidden = !view.text.isEmpty
-                
-                label.snp.makeConstraints { make in
-                    make.top.equalToSuperview().inset( view.textContainerInset.top )
-                    make.leading.equalToSuperview().inset( view.textContainerInset.left + 5 )
-
-                }
-                return label
-            }()
-            
-            let _: UIView = {
-                let separator = UIView()
-                separator.layer.borderWidth = 1
-                separator.layer.borderColor = UIColor(white: 0.3, alpha: 0.2).cgColor
-                
-                view.addSubview(separator)
-                
-                separator.snp.makeConstraints { make in
-                    make.bottom.equalTo(view.snp.bottom).inset(-1)
-                    make.centerX.equalToSuperview()
-                    make.height.equalTo(1)
-                    make.width.equalToSuperview().multipliedBy(0.9)
-                }
-
-                return separator
-            }()
-            
-            return view
-        }()
+        textPanel = NoteEditTextPanel()
+        textPanel.configure(model: model)
+        textPanel.delegate = self
         
         blurEffectView.contentView.addSubview(controlPanel)
-        blurEffectView.contentView.addSubview(titleTextView)
-        blurEffectView.contentView.addSubview(descTextView)
+        blurEffectView.contentView.addSubview(textPanel)
         view.addSubview(backView)
         view.addSubview(blurEffectView)
         
@@ -180,15 +105,9 @@ class NoteEditViewController: UIViewController {
             make.height.equalTo(70)
         }
         
-        titleTextView.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview()
+        textPanel.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
             make.top.equalTo(controlPanel.snp.bottom)
-            make.height.equalTo(70)
-        }
-
-        descTextView.snp.makeConstraints { make in
-            make.bottom.leading.trailing.equalToSuperview()
-            make.top.equalTo(titleTextView.snp.bottom)
         }
     }
     
@@ -208,24 +127,5 @@ class NoteEditViewController: UIViewController {
     
     func didCategoryMenuItemPicked( category: NoteCategory ) {
         model.category = category.rawValue
-    }
-}
-
-//MARK: - TextView Delegate
-extension NoteEditViewController: UITextViewDelegate {
-    func textViewDidEndEditing(_ textView: UITextView) {
-        switch(textView) {
-        case titleTextView: model.title = titleTextView.text
-        case descTextView:  model.description = descTextView.text
-        default: return
-        }
-    }
-    
-    func textViewDidChange(_ textView: UITextView) {
-        switch(textView) {
-        case titleTextView: titlePlaceholder?.isHidden = !textView.text.isEmpty
-        case descTextView: descPlaceholder?.isHidden = !textView.text.isEmpty
-        default: return
-        }
     }
 }
