@@ -60,6 +60,11 @@ class ViewController: UIViewController {
         setupLongGesture()
         
         reloadData()
+        
+        //quick action
+        if let _ = passedShortcut {
+            showNewNoteController()
+        }
     }
 
     
@@ -164,7 +169,7 @@ class ViewController: UIViewController {
         isSelectionMode ? deleteSelectedNotes() : showNewNoteController()
     }
     
-    private func showNewNoteController() {
+    /*private*/ func showNewNoteController() {
         let noteEditView = NoteEditViewController()
         noteEditView.informParentWhenDone = { [weak self] in
             self?.reloadData()

@@ -8,10 +8,10 @@
 import UIKit
 
 let database = Database()
+var passedShortcut: UIApplicationShortcutItem?
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
