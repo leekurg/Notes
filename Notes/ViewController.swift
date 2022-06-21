@@ -105,33 +105,8 @@ class ViewController: UIViewController {
         let layout = collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         layout.sectionInset = UIEdgeInsets(top: 20, left: 0, bottom: 0, right: 0)
         
-        let noContentView: UIView = {
-            let view = UIView()
-            
-            let labelTitle = UILabel()
-            labelTitle.text = "No content"
-            labelTitle.textColor = .lightGray
-            labelTitle.font = UIFont.systemFont(ofSize: 25, weight: .bold)
-            
-            let labelDesc = UILabel()
-            labelDesc.text = "No content is matching your request"
-            labelDesc.textColor = .lightGray
-            
-            view.addSubview(labelTitle)
-            view.addSubview(labelDesc)
-            
-            labelTitle.snp.makeConstraints { make in
-                make.centerX.equalToSuperview()
-                make.centerY.equalToSuperview().offset(-50)
-            }
-            
-            labelDesc.snp.makeConstraints { make in
-                make.top.equalTo(labelTitle.snp.bottom)
-                make.centerX.equalTo(labelTitle)
-            }
-            
-            return view
-        }()
+        let noContentView = NoContentView()
+        noContentView.configure()
         
         stackViewCollection = UIStackView(arrangedSubviews: [collectionView, noContentView])
         stackViewCollection.axis = .vertical
@@ -146,21 +121,7 @@ class ViewController: UIViewController {
     }
     
     private func setupSuperButton() {
-        
-        buttonSuper = {
-            let button = UIButton(type: .system)
-            let cornerR: CGFloat = 30
-            button.layer.cornerRadius = cornerR
-            button.setImage(UIImage(systemName: "plus" )?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)), for: .normal)
-            button.layer.shadowOffset = CGSize(width: 15, height: 15)
-            button.layer.shadowOpacity = 0.3
-            button.layer.shadowRadius = 10
-            button.layer.shadowColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1).cgColor
-            
-            button.addBlurEffect(style: .light, cornerRadius: cornerR, padding: 0)
-            button.backgroundColor = #colorLiteral(red: 1, green: 0.4324872494, blue: 0, alpha: 0.480598096)
-            return button
-        }()
+        buttonSuper = UIButton.createSuperButton(cornerRadius: 30)
         
         view.addSubview(buttonSuper)
 

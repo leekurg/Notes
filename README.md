@@ -14,6 +14,7 @@ Swift/UIKit app for creating notes
   - Create and store notes in local database
   - Edit and delete notes
   - Choose note color and category 
+  - Pin note to top
 
 #### Technology stack: ####
   - Swift/UIKit

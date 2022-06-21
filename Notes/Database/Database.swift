@@ -21,7 +21,7 @@ class Database {
     }
     
     
-    func write(_ model: NoteDataModel?){
+    func write(_ model: NoteDataModel?) {
         guard let model = model else {return}
         try! realm.write({
             
