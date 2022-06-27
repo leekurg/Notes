@@ -15,6 +15,7 @@ class NoteCell: UICollectionViewCell {
     let descLabel: UITextView!
     let pinMark: UIImageView!
     let selectMark: UIImageView!
+    let dateLabel: UILabel!
     
     override init(frame: CGRect) {
                 
@@ -54,10 +55,20 @@ class NoteCell: UICollectionViewCell {
         
         pinMark = {
             let view = UIImageView()
-            view.image = UIImage(systemName: "pin")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .thin, scale: .small))
+            view.image = UIImage(systemName: "pin.fill")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .thin, scale: .small))
             view.alpha = 0
             return view
         }()
+        
+        dateLabel = {
+            let label = UILabel()
+            label.textColor = UIColor(white: 0, alpha: 0.7)
+            label.font = UIFont.systemFont(ofSize: 12, weight: .thin)
+            label.textAlignment = .center
+            return label
+        }()
+        
+        
         
         super.init(frame: frame)
         descLabel.textContainerInset = UIEdgeInsets(top: 35, left: 7, bottom: 5, right: 5)
@@ -73,6 +84,7 @@ class NoteCell: UICollectionViewCell {
         contentView.addSubview(descLabel)
         contentView.addSubview(selectMark)
         contentView.addSubview(pinMark)
+        contentView.addSubview(dateLabel)
         
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(5)
@@ -91,6 +103,11 @@ class NoteCell: UICollectionViewCell {
         pinMark.snp.makeConstraints { make in
             make.top.right.equalToSuperview().inset(5)
         }
+        
+        dateLabel.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(5)
+            make.bottom.equalToSuperview().inset(5)
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -100,6 +117,7 @@ class NoteCell: UICollectionViewCell {
     override func prepareForReuse() {
         self.titleLabel.text = ""
         self.descLabel.text = ""
+        self.dateLabel.text = ""
         self.backgroundColor = NoteColors.getColor(ename: .base)
         self.pinMark.alpha = 0
         self.setSelected(selected: false)
@@ -129,14 +147,24 @@ class NoteCell: UICollectionViewCell {
             self?.selectMark.alpha = selected ? 1 : 0
         }
     }
+    
+    func setDate(date: Date) {
+        var format = "HH:mm dd.MM"
+        
+        let calendar = Calendar.current
+        if calendar.isDateInToday(date) {
+            format = "HH:mm"
+        }
+        else if calendar.isDateInYesterday(date) {
+            dateLabel.text = "yesterday"
+            return
+        }
+        else {
+            format = "dd.MM.yyyy"
+        }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        dateLabel.text = dateFormatter.string(from: date)
+    }
 }
-
-//public extension UITextView {
-//    var visibleRange: NSRange? {
-//        guard let start = closestPosition(to: contentOffset),
-//                let end = characterRange(at: CGPoint(x: contentOffset.x + bounds.maxX,
-//                                                   y: contentOffset.y + bounds.maxY))?.end
-//        else { return nil }
-//        return NSMakeRange(offset(from: beginningOfDocument, to: start), offset(from: start, to: end))
-//    }
-//}

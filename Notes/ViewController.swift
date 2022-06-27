@@ -169,7 +169,7 @@ class ViewController: UIViewController {
         isSelectionMode ? deleteSelectedNotes() : showNewNoteController()
     }
     
-    /*private*/ func showNewNoteController() {
+    func showNewNoteController() {
         let noteEditView = NoteEditViewController()
         noteEditView.informParentWhenDone = { [weak self] in
             self?.reloadData()
@@ -329,6 +329,10 @@ extension ViewController: UICollectionViewDataSource {
         if var text = notesModel[indexPath]?.description {
             text = text.trimmingCharacters(in: .newlines)
             cell.descLabel.text = text
+        }
+        
+        if let timestamp = notesModel[indexPath]?.timestamp {
+            cell.setDate(date: timestamp)
         }
         
         if let pinned = notesModel[indexPath]?.pinned, pinned == true {

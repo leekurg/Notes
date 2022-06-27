@@ -69,6 +69,14 @@ class NoteEditViewController: UIViewController {
         }
         
         model.timestamp = Date()
+        //debug
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "dd.MM.yyyy HH:mm"
+//        let date = dateFormatter.date(from: "20.06.2021 11:10")
+//        if let date = date {
+//            model.timestamp = date
+//        }
+        //
         
         isNew ? database.write(model) : database.update(model)
 
