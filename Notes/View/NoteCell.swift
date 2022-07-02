@@ -55,7 +55,7 @@ class NoteCell: UICollectionViewCell {
         
         pinMark = {
             let view = UIImageView()
-            view.image = UIImage(systemName: "pin.fill")?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .thin, scale: .small))
+            view.image = UIImage(systemName: "pin.fill")?.withTintColor( UIColor(white: 0, alpha: 0.3), renderingMode: .alwaysOriginal).withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .thin, scale: .small))
             view.alpha = 0
             return view
         }()
@@ -93,7 +93,8 @@ class NoteCell: UICollectionViewCell {
         }
 
         descLabel.snp.makeConstraints { make in
-            make.top.bottom.leading.trailing.equalToSuperview().inset(5)
+            make.top.leading.trailing.equalToSuperview().inset(5)
+            make.bottom.equalToSuperview().inset(15)
         }
         
         selectMark.snp.makeConstraints { make in
@@ -150,14 +151,16 @@ class NoteCell: UICollectionViewCell {
     
     func setDate(date: Date) {
         var format = "HH:mm dd.MM"
+        var prefix = ""
         
         let calendar = Calendar.current
         if calendar.isDateInToday(date) {
+            prefix = "today "
             format = "HH:mm"
         }
         else if calendar.isDateInYesterday(date) {
-            dateLabel.text = "yesterday"
-            return
+            prefix = "yesterday "
+            format = "HH:mm"
         }
         else {
             format = "dd.MM.yyyy"
@@ -165,6 +168,6 @@ class NoteCell: UICollectionViewCell {
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
-        dateLabel.text = dateFormatter.string(from: date)
+        dateLabel.text = prefix + dateFormatter.string(from: date)
     }
 }

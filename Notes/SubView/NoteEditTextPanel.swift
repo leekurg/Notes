@@ -114,9 +114,6 @@ final class NoteEditTextPanel: UIView {
             (desc == nil || desc!.isEmpty) {
             titleTextView.becomeFirstResponder()
         }
-        else {
-            descTextView.becomeFirstResponder()
-        }
     }
 }
 

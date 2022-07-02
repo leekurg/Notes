@@ -9,4 +9,5 @@ target 'Notes' do
   pod 'SnapKit', '~> 5.6.0'
   pod 'RealmSwift', '~>10.10'
   pod 'SwiftGen', '~>6.5.1'
+  pod 'IQKeyboardManager', '~>6.5.0'
 end

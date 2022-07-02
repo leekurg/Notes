@@ -32,6 +32,7 @@ class Database {
             object.desc = model.description ?? ""
             object.color = model.color ?? ""
             object.category = model.category ?? ""
+            object.pinned = model.pinned
                 
             realm.add(object)
         })
@@ -74,7 +75,7 @@ class Database {
     
     func read( query: String? = nil ) -> NotesDataModel {
         
-        var data = realm.objects( NoteDataObject.self )
+        var data = realm.objects( NoteDataObject.self ).sorted(byKeyPath: "timestamp", ascending: false)
         lastId = data.max(ofProperty: "id") as Int?
         
         if let query = query {
@@ -85,6 +86,7 @@ class Database {
         for item in data {
             model.append(note: NoteDataModel(object: item))
         }
+        
         return model
     }
     
