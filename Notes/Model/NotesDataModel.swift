@@ -60,6 +60,33 @@ struct NotesDataModel {
         }
     }
 
+    func getNote( withId id: String?) -> NoteDataModel? {
+        guard let _ = id, let id = Int(id!) else { return nil }
+        return getNote(withId: id)
+    }
+    
+    func getNote( withId id: Int) -> NoteDataModel? {
+        for section in sections {
+            for note in section.notes {
+                if note.id == id {
+                    return note
+                }
+            }
+        }
+        return nil
+    }
+    
+    func getNoteIndexPath(id: Int) -> IndexPath? {
+        for (nsection, section) in sections.enumerated() {
+            for (row,note) in section.notes.enumerated() {
+                if note.id == id {
+                    return IndexPath(row: row, section: nsection)
+                }
+            }
+        }
+        return nil
+    }
+    
     private func getIndexForSectionName( section: String? ) -> Int? {
         guard let section = section else {
             return nil
@@ -82,6 +109,7 @@ struct SectionDataModel {
 struct NoteDataModel: Equatable {
     var id: Int
     var timestamp: Date
+    var scheduled: Date?
     var title: String?
     var description: String?
     var color: String?
@@ -93,6 +121,7 @@ extension NoteDataModel {
     init( object: NoteDataObject ) {
         id = object.id
         timestamp = object.timestamp
+        scheduled = object.scheduled
         title = object.title
         description = object.desc
         color = object.color

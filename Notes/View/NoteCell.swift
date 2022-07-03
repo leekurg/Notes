@@ -15,7 +15,7 @@ class NoteCell: UICollectionViewCell {
     let descLabel: UITextView!
     let pinMark: UIImageView!
     let selectMark: UIImageView!
-    let dateLabel: UILabel!
+    let scheduleLabel: ScheduleLabel!
     
     override init(frame: CGRect) {
                 
@@ -60,14 +60,8 @@ class NoteCell: UICollectionViewCell {
             return view
         }()
         
-        dateLabel = {
-            let label = UILabel()
-            label.textColor = UIColor(white: 0, alpha: 0.7)
-            label.font = UIFont.systemFont(ofSize: 12, weight: .thin)
-            label.textAlignment = .center
-            return label
-        }()
-        
+        scheduleLabel = ScheduleLabel()
+        scheduleLabel.configure()
         
         
         super.init(frame: frame)
@@ -84,7 +78,7 @@ class NoteCell: UICollectionViewCell {
         contentView.addSubview(descLabel)
         contentView.addSubview(selectMark)
         contentView.addSubview(pinMark)
-        contentView.addSubview(dateLabel)
+        contentView.addSubview(scheduleLabel)
         
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().inset(5)
@@ -105,8 +99,8 @@ class NoteCell: UICollectionViewCell {
             make.top.right.equalToSuperview().inset(5)
         }
         
-        dateLabel.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(5)
+        scheduleLabel.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
             make.bottom.equalToSuperview().inset(5)
         }
     }
@@ -118,7 +112,7 @@ class NoteCell: UICollectionViewCell {
     override func prepareForReuse() {
         self.titleLabel.text = ""
         self.descLabel.text = ""
-        self.dateLabel.text = ""
+        self.scheduleLabel.text = ""
         self.backgroundColor = NoteColors.getColor(ename: .base)
         self.pinMark.alpha = 0
         self.setSelected(selected: false)
@@ -149,7 +143,12 @@ class NoteCell: UICollectionViewCell {
         }
     }
     
-    func setDate(date: Date) {
+    func setDate(date: Date?) {
+        guard let date = date else {
+            scheduleLabel.text = ""
+            return
+        }
+        
         var format = "HH:mm dd.MM"
         var prefix = ""
         
@@ -168,6 +167,6 @@ class NoteCell: UICollectionViewCell {
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
-        dateLabel.text = prefix + dateFormatter.string(from: date)
+        scheduleLabel.text = prefix + dateFormatter.string(from: date)
     }
 }

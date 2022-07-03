@@ -63,7 +63,7 @@ class ViewController: UIViewController {
         
         //quick action
         if let _ = passedShortcut {
-            showNewNoteController()
+            showNoteController()
         }
     }
 
@@ -166,15 +166,56 @@ class ViewController: UIViewController {
     
     @objc private func didSuperButtonTouched() {
         animateButtonPressed(button: buttonSuper)
-        isSelectionMode ? deleteSelectedNotes() : showNewNoteController()
+        isSelectionMode ? deleteSelectedNotes() : showNoteController()
     }
     
-    func showNewNoteController() {
-        let noteEditView = NoteEditViewController()
+    func showNoteController(id: String?) {
+        showNoteController(model: notesModel?.getNote(withId: id)) 
+    }
+    
+    func showNoteController(model: NoteDataModel? = nil) {
+        if let nevc = presentedViewController as? NoteEditViewController {
+            if let id = model?.id, id != nevc.getNoteId() {
+                presentedViewController?.dismiss(animated: true)
+            }
+        }
+        
+        let noteEditView = NoteEditViewController(model: model)
         noteEditView.informParentWhenDone = { [weak self] in
-            self?.reloadData()
+            self?.reloadData(query: self?.searchController.searchBar.text)
         }
         present(noteEditView, animated: true)
+    }
+    
+    func handleScheduledNotification(id: String?) {
+        guard let _ = id, let id = Int(id!) else { return }
+        
+        let note = notesModel?.getNote(withId: id)
+        if let note = note {
+            //if editing note
+            if let nevc = presentedViewController as? NoteEditViewController {
+                if note.id == nevc.getNoteId() {
+                    nevc.didScheduled(date: nil)
+                }
+            }
+        }
+        
+        database.updateUnschedule(listId: [id])
+        if isSearching && note == nil
+        {}
+        else if isSelectionMode
+        {
+//            if let list = collectionView.indexPathsForSelectedItems {
+//                reloadData()
+//                for path in list {
+//                    let cell = collectionView.cellForItem(at: path) as? NoteCell
+//                    cell?.setSelected()
+//                }
+//            }
+        }
+        else {
+            reloadData(query: searchController.searchBar.text)    //TODO if search? if editing? deleting notes
+        }
     }
     
     private func deleteSelectedNotes() {
@@ -331,16 +372,20 @@ extension ViewController: UICollectionViewDataSource {
             cell.descLabel.text = text
         }
         
-        if let timestamp = notesModel[indexPath]?.timestamp {
-            cell.setDate(date: timestamp)
-        }
-        
         if let pinned = notesModel[indexPath]?.pinned, pinned == true {
             cell.pinMark.alpha = 1
         }
         
+        if let scheduled = notesModel[indexPath]?.scheduled, scheduled > .now {
+            cell.setDate(date: scheduled)
+        }
+        
         cell.backgroundColor = NoteColors.getColor(name: notesModel[indexPath]?.color)
         return cell
+    }
+    
+    func reloadData(atIndexPaths indexPaths: [IndexPath]) {
+        collectionView.reloadItems(at: indexPaths)
     }
     
     func reloadData( query: String? = nil )
@@ -387,11 +432,7 @@ extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
         if let _ = collectionView.cellForItem(at: indexPath) as? NoteCell {
             if isSelectionMode == false {
-                let noteEditView = NoteEditViewController(model: notesModel[indexPath])
-                noteEditView.informParentWhenDone = { [weak self] in
-                    self?.reloadData(query: self?.searchController.searchBar.text)
-                }
-                present(noteEditView, animated: true)
+                showNoteController(model: notesModel[indexPath])
                 return false
             }
             else {

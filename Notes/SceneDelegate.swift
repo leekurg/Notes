@@ -10,7 +10,6 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    var viewController: UIViewController?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -21,15 +20,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         //quick action cold handling
         passedShortcut = connectionOptions.shortcutItem
         
-        viewController = ViewController()
-        window?.rootViewController = UINavigationController(rootViewController: viewController!)
+        window?.rootViewController = UINavigationController(rootViewController: ViewController())
     }
 
     //quick action hot handling
     func windowScene(_ windowScene: UIWindowScene, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         
-        if let vc = viewController as? ViewController {
-            vc.showNewNoteController()
+        let nc = window?.rootViewController as? UINavigationController
+        if let vc = nc?.viewControllers.first as? ViewController {
+            vc.showNoteController()
         }
     }
     

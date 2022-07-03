@@ -28,6 +28,7 @@ class Database {
             let object = NoteDataObject()
             object.id = model.id
             object.timestamp = model.timestamp
+            object.scheduled = model.scheduled
             object.title = model.title ?? ""
             object.desc = model.description ?? ""
             object.color = model.color ?? ""
@@ -45,6 +46,7 @@ class Database {
 
             try! realm.write({
                 object.timestamp = model.timestamp
+                object.scheduled = model.scheduled
                 object.title = model.title ?? ""
                 object.desc = model.description ?? ""
                 object.color = model.color ?? ""
@@ -69,6 +71,16 @@ class Database {
                 if let pinned = value {
                     object.setValue( !pinned, forKey: "pinned")
                 }
+            }
+        })
+    }
+    
+    func updateUnschedule(listId: [Int]) {
+        let objects = realm.objects( NoteDataObject.self ).filter("id IN %@", listId)
+
+        try! realm.write({
+            for object in objects {
+                object.setValue( nil, forKey: "scheduled")
             }
         })
     }

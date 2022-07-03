@@ -13,9 +13,11 @@ final class NoteEditControlPanel: UIView {
     private var buttonColor: UIButton!
     private var buttonPin: UIButton!
     private var buttonCategory: UIButton!
+    private var buttonSchedule: UIButton!
     private var buttonClose: UIButton!
     
     private var pinned = false
+    private var scheduled = false
     
     func configure(model: NoteDataModel) {
         self.backgroundColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 0.4)
@@ -63,6 +65,16 @@ final class NoteEditControlPanel: UIView {
             return button
         }()
         
+        buttonSchedule  = {
+            let button = UIButton()
+            button.layer.borderWidth = 1
+            button.layer.borderColor = UIColor(white: 1, alpha: 0.5).cgColor
+            button.layer.cornerRadius = 15
+            button.addTarget(self, action: #selector(didButtonScheduleTouched), for: .touchUpInside)
+            return button
+        }()
+        setScheduledMark(scheduled: model.scheduled != nil )
+        
         buttonClose = {
             let button = UIButton()
             let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .thin, scale: .large)
@@ -80,6 +92,7 @@ final class NoteEditControlPanel: UIView {
         self.addSubview(buttonColor)
         self.addSubview(buttonPin)
         self.addSubview(buttonCategory)
+        self.addSubview(buttonSchedule)
         self.addSubview(buttonClose)
         
         buttonColor.snp.makeConstraints { make in
@@ -98,6 +111,12 @@ final class NoteEditControlPanel: UIView {
             make.center.equalToSuperview()
             make.width.equalTo(150)
             make.height.equalTo(30)
+        }
+        
+        buttonSchedule.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.trailing.equalTo(buttonClose.snp.leading).inset(-15)
+            make.width.height.equalTo(30)
         }
         
         buttonClose.snp.makeConstraints { make in
@@ -179,6 +198,15 @@ final class NoteEditControlPanel: UIView {
         )
     }
     
+    func setScheduledMark(scheduled: Bool) {
+        self.scheduled = scheduled
+        UIView.transition(with: buttonSchedule, duration: 0.5, options: .transitionCrossDissolve,
+                          animations: { [weak self] in
+                            self?.buttonSchedule.setImage(UIImage(systemName: scheduled ? "bell.fill" : "bell" )?.withTintColor(UIColor(white: 1, alpha: 0.7), renderingMode: .alwaysOriginal), for: .normal) },
+                          completion: nil
+        )
+    }
+    
     private func setCategory(category: String?) {
         buttonCategory.setTitle(category?.uppercased(), for: .normal)
     }
@@ -190,6 +218,10 @@ final class NoteEditControlPanel: UIView {
     @objc private func didButtonPinTouched() {
         delegate?.didButtonPinTouched()
         setPinnedMark(pinned: !pinned)
+    }
+    
+    @objc private func didButtonScheduleTouched() {
+        delegate?.didButtonScheduleTouched()
     }
     
 }

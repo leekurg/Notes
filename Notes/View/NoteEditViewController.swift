@@ -78,11 +78,18 @@ class NoteEditViewController: UIViewController {
 //        }
         //
         
-        isNew ? database.write(model) : database.update(model)
-
-        if let inform = informParentWhenDone {
-            inform()
+        if let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+           let notificationManager = appDelegate.notificationManager {
+            if model.scheduled != nil {
+                notificationManager.scheduleNotification(note: model)
+            }
+            else {
+                notificationManager.removeScheduledNotification(noteid: model.id)
+            }
         }
+        
+        isNew ? database.write(model) : database.update(model)
+        informParentWhenDone?()
     }
     
     //MARK: - Setup UI
@@ -119,13 +126,34 @@ class NoteEditViewController: UIViewController {
         }
     }
     
-    //MARK: Action
+    //MARK: - Action
     func didCloseTouched() {
         self.dismiss(animated: true)
     }
     
     func didButtonPinTouched() {
         model.pinned = !model.pinned
+    }
+    
+    func didButtonScheduleTouched() {
+        if model.scheduled != nil {
+            let alert = UIAlertController(title: "Unscheduling", message: "Note will be unscheduled. Are you sure?", preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: "Unschedule", style: .destructive, handler: { [weak self] _ in
+                self?.didScheduled(date: nil)
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            self.present(alert, animated: true)
+            return
+        }
+        
+        let datePickerViewController = DatePickerViewController()
+        datePickerViewController.doOnDisappear = didScheduled(date:)
+        present(datePickerViewController, animated: true)
+    }
+    
+    func didScheduled(date: Date?) {
+        model.scheduled = date
+        controlPanel.setScheduledMark(scheduled: date != nil)
     }
 
     func didColorMenuItemPicked( color: NoteColors.Names ) {
@@ -135,5 +163,10 @@ class NoteEditViewController: UIViewController {
     
     func didCategoryMenuItemPicked( category: NoteCategory ) {
         model.category = category.rawValue
+    }
+    
+    //MARK: - Request data
+    func getNoteId() -> Int {
+        return model.id
     }
 }
