@@ -169,11 +169,17 @@ class ViewController: UIViewController {
         isSelectionMode ? deleteSelectedNotes() : showNoteController()
     }
     
-    func showNoteController(id: String?) {
-        showNoteController(model: notesModel?.getNote(withId: id)) 
+    func showNoteControllerFromNotification(id: String?) {
+        if !isSearching && !isSelectionMode {
+            showNoteController(model: notesModel?.getNote(withId: id))
+        }
     }
     
     func showNoteController(model: NoteDataModel? = nil) {
+        //check scheduled time expiried
+//        if let scheduled = model?.scheduled, scheduled < .now {
+//            database.updateUnschedule(listId: [id])
+//        }
         if let nevc = presentedViewController as? NoteEditViewController {
             if let id = model?.id, id != nevc.getNoteId() {
                 presentedViewController?.dismiss(animated: true)
@@ -188,7 +194,7 @@ class ViewController: UIViewController {
     }
     
     func handleScheduledNotification(id: String?) {
-        guard let _ = id, let id = Int(id!) else { return }
+        guard let _ = notesModel, let _ = id, let id = Int(id!) else { return }
         
         let note = notesModel?.getNote(withId: id)
         if let note = note {
@@ -201,20 +207,27 @@ class ViewController: UIViewController {
         }
         
         database.updateUnschedule(listId: [id])
+        
         if isSearching && note == nil
         {}
         else if isSelectionMode
         {
-//            if let list = collectionView.indexPathsForSelectedItems {
-//                reloadData()
-//                for path in list {
-//                    let cell = collectionView.cellForItem(at: path) as? NoteCell
-//                    cell?.setSelected()
-//                }
-//            }
+            //change model for one note
+            if let indexPath = notesModel.getNoteIndexPath(id: id) {
+                let list = collectionView.indexPathsForSelectedItems
+                
+                notesModel.sections[indexPath.section].notes[indexPath.item].scheduled = nil
+                reloadData(atIndexPaths: [indexPath])
+                
+                if let list = list, list.contains(indexPath) {
+                    let cell = collectionView.cellForItem(at: indexPath) as? NoteCell
+                    collectionView.selectItem(at: indexPath, animated: false, scrollPosition: [])
+                    cell?.setSelected()
+                }
+            }
         }
-        else {
-            reloadData(query: searchController.searchBar.text)    //TODO if search? if editing? deleting notes
+        else {  //search active, note is displayng
+            reloadData(query: searchController.searchBar.text)
         }
     }
     
@@ -237,6 +250,11 @@ class ViewController: UIViewController {
                 self.showAlert(title: "Error", text: "Unable to delete from database")
                 self.isSelectionMode = false
                 return
+            }
+            
+            if let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+               let notificationManager = appDelegate.notificationManager {
+                notificationManager.removeScheduledNotification(listId: listId)
             }
 
             self.reloadData()

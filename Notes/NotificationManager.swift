@@ -29,7 +29,7 @@ class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
             //check if notification is already scheduled
             for item in list {
                 if item.identifier == "\(note.id)" {
-                    self?.removeScheduledNotification(noteid: item.identifier)
+                    self?.removeScheduledNotification(listId: [item.identifier])
                     break
                 }
             }
@@ -38,6 +38,7 @@ class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
             let content = UNMutableNotificationContent()
             content.title = note.title ?? "Notification"
             content.body = note.description ?? ""
+            content.badge = 1
             
             let trigger = UNCalendarNotificationTrigger(dateMatching: Calendar.current.dateComponents(
                 [.day, .month, .year, .hour, .minute],
@@ -56,11 +57,13 @@ class NotificationManager: NSObject, UNUserNotificationCenterDelegate {
         }
     }
     
-    func removeScheduledNotification(noteid: Int) {
-        removeScheduledNotification(noteid: "\(noteid)")
+    func removeScheduledNotification(listId: [Int]) {
+        let list = listId.map { String($0) }
+        removeScheduledNotification(listId: list )
     }
     
-    func removeScheduledNotification(noteid: String) {
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [noteid])
+    func removeScheduledNotification(listId: [String]) {
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: listId)
+        UNUserNotificationCenter.current().removeAllDeliveredNotifications()
     }
 }

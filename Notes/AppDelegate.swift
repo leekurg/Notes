@@ -19,6 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         notificationManager = NotificationManager()
         UNUserNotificationCenter.current().delegate = self
         
+        UIApplication.shared.applicationIconBadgeNumber = 0
+        
         return true
     }
 
@@ -38,16 +40,24 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
         if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate,
         let nc = sceneDelegate.window?.rootViewController as? UINavigationController,
         let vc = nc.viewControllers.first as? ViewController {
+            UIApplication.shared.applicationIconBadgeNumber = 0
             vc.handleScheduledNotification(id: notification.request.identifier)
         }
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        
         if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate,
         let nc = sceneDelegate.window?.rootViewController as? UINavigationController,
         let vc = nc.viewControllers.first as? ViewController {
-            vc.showNoteController(id: response.notification.request.identifier)
+            if UIApplication.shared.applicationState == .inactive ||
+                UIApplication.shared.applicationState == .background {
+                vc.handleScheduledNotification(id: response.notification.request.identifier)
+            }
+            vc.showNoteControllerFromNotification(id: response.notification.request.identifier)
+            let n = UIApplication.shared.applicationIconBadgeNumber
+            if n > 0 {
+                UIApplication.shared.applicationIconBadgeNumber = n - 1
+            }
         }
     }
 }

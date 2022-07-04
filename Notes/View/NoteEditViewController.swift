@@ -84,7 +84,7 @@ class NoteEditViewController: UIViewController {
                 notificationManager.scheduleNotification(note: model)
             }
             else {
-                notificationManager.removeScheduledNotification(noteid: model.id)
+                notificationManager.removeScheduledNotification(listId: [model.id])
             }
         }
         
@@ -136,7 +136,7 @@ class NoteEditViewController: UIViewController {
     }
     
     func didButtonScheduleTouched() {
-        if model.scheduled != nil {
+        if model.scheduled != nil && model.scheduled! > .now {
             let alert = UIAlertController(title: "Unscheduling", message: "Note will be unscheduled. Are you sure?", preferredStyle: .actionSheet)
             alert.addAction(UIAlertAction(title: "Unschedule", style: .destructive, handler: { [weak self] _ in
                 self?.didScheduled(date: nil)

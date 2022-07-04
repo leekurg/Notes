@@ -73,7 +73,7 @@ final class NoteEditControlPanel: UIView {
             button.addTarget(self, action: #selector(didButtonScheduleTouched), for: .touchUpInside)
             return button
         }()
-        setScheduledMark(scheduled: model.scheduled != nil )
+        setScheduledMark(scheduled: model.scheduled != nil && model.scheduled! > .now)
         
         buttonClose = {
             let button = UIButton()
