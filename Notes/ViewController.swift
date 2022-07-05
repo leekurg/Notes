@@ -182,7 +182,14 @@ class ViewController: UIViewController {
 //        }
         if let nevc = presentedViewController as? NoteEditViewController {
             if let id = model?.id, id != nevc.getNoteId() {
-                presentedViewController?.dismiss(animated: true)
+//                presentedViewController?.dismiss(animated: true)
+                if let calendarvc = nevc.presentedViewController as? DatePickerViewController {
+                    calendarvc.dismiss(animated: true)
+                    nevc.dismiss(animated: false)
+                }
+                else {
+                    nevc.dismiss(animated: true)
+                }
             }
         }
         
@@ -395,7 +402,7 @@ extension ViewController: UICollectionViewDataSource {
         }
         
         if let scheduled = notesModel[indexPath]?.scheduled, scheduled > .now {
-            cell.setDate(date: scheduled)
+            cell.setScheduledMark(date: scheduled)
         }
         
         cell.backgroundColor = NoteColors.getColor(name: notesModel[indexPath]?.color)

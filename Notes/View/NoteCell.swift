@@ -112,7 +112,7 @@ class NoteCell: UICollectionViewCell {
     override func prepareForReuse() {
         self.titleLabel.text = ""
         self.descLabel.text = ""
-        self.scheduleLabel.text = ""
+        scheduleLabel.setScheduledMark(date: nil)
         self.backgroundColor = NoteColors.getColor(ename: .base)
         self.pinMark.alpha = 0
         self.setSelected(selected: false)
@@ -143,30 +143,7 @@ class NoteCell: UICollectionViewCell {
         }
     }
     
-    func setDate(date: Date?) {
-        guard let date = date else {
-            scheduleLabel.text = ""
-            return
-        }
-        
-        var format = "HH:mm dd.MM"
-        var prefix = ""
-        
-        let calendar = Calendar.current
-        if calendar.isDateInToday(date) {
-            prefix = "today "
-            format = "HH:mm"
-        }
-        else if calendar.isDateInYesterday(date) {
-            prefix = "yesterday "
-            format = "HH:mm"
-        }
-        else {
-            format = "dd.MM.yyyy"
-        }
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = format
-        scheduleLabel.text = prefix + dateFormatter.string(from: date)
+    func setScheduledMark(date: Date?) {
+        scheduleLabel.setScheduledMark(date: date)
     }
 }

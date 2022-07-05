@@ -12,7 +12,7 @@ class ScheduleLabel: UIView {
     private var scheduleMark: UIImageView!
     private var dateLabel: UILabel!
     
-    var text: String? {
+    private var text: String? {
         get {
             return dateLabel.text
         }
@@ -54,5 +54,39 @@ class ScheduleLabel: UIView {
             make.leading.equalTo(scheduleMark.snp.trailing).inset(-5)
             make.top.bottom.trailing.equalToSuperview()
         }
+    }
+    
+    func setScheduledMark(date: Date?) {
+        guard let date = date else {
+            text = ""
+            return
+        }
+        
+        var format = "HH:mm dd.MM"
+        var prefix = ""
+        
+        let calendar = Calendar.current
+        if calendar.isDateInToday(date) {
+            prefix = "today "
+            format = "HH:mm"
+        }
+        else if calendar.isDateInTomorrow(date) {
+            prefix = "tomorrow "
+            format = "HH:mm"
+        }
+        //in week ahead
+        else if date.timeIntervalSince(.now) / 86400.0 <= 7 {
+            format = "EEEE HH:mm"
+        }
+        else if calendar.component(Calendar.Component.year, from: date) == calendar.component(Calendar.Component.year, from: .now) {
+            format = "d MMMM"
+        }
+        else {
+            format = "d MMM yyyy"
+        }
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = format
+        text = prefix + dateFormatter.string(from: date)
     }
 }
