@@ -12,4 +12,13 @@ case pinned = "pinned"
 case other = "other"
 case pesonal = "personal"
 case work = "work"
+    
+    func tr() -> String{
+        switch(self) {
+        case .pinned:   return "Pinned"
+        case .other:    return "Other"
+        case .pesonal:  return "Personal"
+        case .work:     return "Work"
+        }
+    }
 }

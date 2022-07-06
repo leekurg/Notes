@@ -1,0 +1,19 @@
+/* 
+  Localizable.strings
+  Notes
+
+  Created by Илья Аникин on 06.07.2022.
+  
+*/
+
+"main_navigationbar_title" = "Notes";
+"main_error" = "Error";
+"main_error_delete_db" = "Unable to delete from database";
+"main_cancel_action" = "Cancel";
+"main_pin_action" = "Pin";
+
+//alert
+"alert_remove_title" = "Removing";
+"alert_remove_text" = "note(s) will be removerd. Are you sure?";
+"alert_remove_action" = "Remove";
+

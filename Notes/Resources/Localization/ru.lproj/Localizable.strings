@@ -1,0 +1,18 @@
+/* 
+  Localizable.strings
+  Notes
+
+  Created by Илья Аникин on 06.07.2022.
+  
+*/
+
+"main_navigationbar_title" = "Заметки";
+"main_error" = "Ошибка";
+"main_error_delete_db" = "Не удалось удалить из базы данных";
+"main_cancel_action" = "Отменить";
+"main_pin_action" = "Закрепить";
+
+//alert
+"alert_remove_title" = "Удаление";
+"alert_remove_text" = "заметка(ки) будут удалены. Вы уверены?";
+"alert_remove_action" = "Удалить";

@@ -24,6 +24,9 @@
 		1E3987952870A1F700409A75 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3987942870A1F600409A75 /* NotificationManager.swift */; };
 		1E3987972870CB3700409A75 /* DatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3987962870CB3700409A75 /* DatePickerViewController.swift */; };
 		1E83114828719CFB007E402A /* ScheduleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E83114728719CFB007E402A /* ScheduleLabel.swift */; };
+		1E9E2B3E28758DA300678C83 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1E9E2B4028758DA300678C83 /* Localizable.strings */; };
+		1E9E2B4328758E1A00678C83 /* swiftgen.yml in Resources */ = {isa = PBXBuildFile; fileRef = 1E9E2B4228758E1A00678C83 /* swiftgen.yml */; };
+		1E9E2B4628758FDA00678C83 /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9E2B4528758FDA00678C83 /* L10n.swift */; };
 		C619C79E285FC9A3001803D7 /* Orientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C619C79D285FC9A3001803D7 /* Orientation.swift */; };
 		C66E3B5E2861F0B9009C75E5 /* NoContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C66E3B5D2861F0B9009C75E5 /* NoContentView.swift */; };
 		C66E3B602861F454009C75E5 /* SuperButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C66E3B5F2861F454009C75E5 /* SuperButton.swift */; };
@@ -53,6 +56,12 @@
 		1E3987942870A1F600409A75 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		1E3987962870CB3700409A75 /* DatePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerViewController.swift; sourceTree = "<group>"; };
 		1E83114728719CFB007E402A /* ScheduleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleLabel.swift; sourceTree = "<group>"; };
+		1E9E2B3A28758C9C00678C83 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
+		1E9E2B3B28758C9C00678C83 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
+		1E9E2B3F28758DA300678C83 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		1E9E2B4128758DA900678C83 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		1E9E2B4228758E1A00678C83 /* swiftgen.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
+		1E9E2B4528758FDA00678C83 /* L10n.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = L10n.swift; sourceTree = "<group>"; };
 		227079B97D73C8CF7250A79B /* Pods-Notes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Notes.release.xcconfig"; path = "Target Support Files/Pods-Notes/Pods-Notes.release.xcconfig"; sourceTree = "<group>"; };
 		3EF4187404B262E72A1E1166 /* Pods-Notes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Notes.debug.xcconfig"; path = "Target Support Files/Pods-Notes/Pods-Notes.debug.xcconfig"; sourceTree = "<group>"; };
 		C619C79D285FC9A3001803D7 /* Orientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orientation.swift; sourceTree = "<group>"; };
@@ -115,6 +124,7 @@
 				1E3987942870A1F600409A75 /* NotificationManager.swift */,
 				090F42B82853BF050098C7FD /* NoteColors.swift */,
 				091FEA492857455E00808247 /* NoteCategory.swift */,
+				1E9E2B3828758C5D00678C83 /* Resources */,
 				096F7A7A284CD6E9004C9983 /* Main.storyboard */,
 				096F7A7D284CD6EA004C9983 /* Assets.xcassets */,
 				096F7A7F284CD6EA004C9983 /* LaunchScreen.storyboard */,
@@ -142,6 +152,24 @@
 				091FEA4D2857DE6900808247 /* NotesDataModel.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		1E9E2B3828758C5D00678C83 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				1E9E2B4228758E1A00678C83 /* swiftgen.yml */,
+				1E9E2B3928758C6600678C83 /* Localization */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		1E9E2B3928758C6600678C83 /* Localization */ = {
+			isa = PBXGroup;
+			children = (
+				1E9E2B4528758FDA00678C83 /* L10n.swift */,
+				1E9E2B4028758DA300678C83 /* Localizable.strings */,
+			);
+			path = Localization;
 			sourceTree = "<group>";
 		};
 		3AF924B0E01AB0161DF3E3A4 /* Frameworks */ = {
@@ -187,6 +215,7 @@
 			buildConfigurationList = 096F7A85284CD6EA004C9983 /* Build configuration list for PBXNativeTarget "Notes" */;
 			buildPhases = (
 				51AF1081F109178B182427BF /* [CP] Check Pods Manifest.lock */,
+				1E9E2B4428758EA600678C83 /* SwiftGen */,
 				096F7A6D284CD6E9004C9983 /* Sources */,
 				096F7A6E284CD6E9004C9983 /* Frameworks */,
 				096F7A6F284CD6E9004C9983 /* Resources */,
@@ -223,6 +252,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 096F7A68284CD6E9004C9983;
 			productRefGroup = 096F7A72284CD6E9004C9983 /* Products */;
@@ -240,6 +270,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				096F7A81284CD6EA004C9983 /* LaunchScreen.storyboard in Resources */,
+				1E9E2B4328758E1A00678C83 /* swiftgen.yml in Resources */,
+				1E9E2B3E28758DA300678C83 /* Localizable.strings in Resources */,
 				096F7A7E284CD6EA004C9983 /* Assets.xcassets in Resources */,
 				096F7A7C284CD6E9004C9983 /* Main.storyboard in Resources */,
 			);
@@ -248,6 +280,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		1E9E2B4428758EA600678C83 /* SwiftGen */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = SwiftGen;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nLOCALIZATION_PATH=\"$SRCROOT/Notes/Resources\"\nCONFIG_FILE=\"swiftgen.yml\"\n\n# navigate to the localization folder\ncd $LOCALIZATION_PATH\n\n# check if SwiftGen is installed\nif command -v \"$SRCROOT\"/Pods/SwiftGen/bin/swiftgen &> /dev/null; then\n    echo \"++++++ $SRCROOT/Pods\"\n    \"$SRCROOT\"/Pods/SwiftGen/bin/swiftgen config run --config \"$LOCALIZATION_PATH/$CONFIG_FILE\"\nelse\n    echo \"Error: SwiftGen is not installed.\"\n    exit 1\nfi\n";
+		};
 		449AC5CED3C013E624D4EC31 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -298,6 +348,7 @@
 				096F7A91284D5810004C9983 /* NoteEditViewController.swift in Sources */,
 				1E3987972870CB3700409A75 /* DatePickerViewController.swift in Sources */,
 				C66E3B602861F454009C75E5 /* SuperButton.swift in Sources */,
+				1E9E2B4628758FDA00678C83 /* L10n.swift in Sources */,
 				C6FACF4F286072A8001AB18F /* NoteEditTextPanel.swift in Sources */,
 				096F7A75284CD6E9004C9983 /* AppDelegate.swift in Sources */,
 				C66E3B5E2861F0B9009C75E5 /* NoContentView.swift in Sources */,
@@ -323,6 +374,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				096F7A7B284CD6E9004C9983 /* Base */,
+				1E9E2B3A28758C9C00678C83 /* ru */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -331,8 +383,18 @@
 			isa = PBXVariantGroup;
 			children = (
 				096F7A80284CD6EA004C9983 /* Base */,
+				1E9E2B3B28758C9C00678C83 /* ru */,
 			);
 			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		1E9E2B4028758DA300678C83 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1E9E2B3F28758DA300678C83 /* en */,
+				1E9E2B4128758DA900678C83 /* ru */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -342,6 +404,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
@@ -402,6 +465,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";

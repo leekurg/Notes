@@ -70,7 +70,8 @@ class ViewController: UIViewController {
     
     //MARK: - Setup UI
     private func setupToolBar() {
-        navigationItem.title = "Notes"
+        navigationItem.title = L10n.mainNavigationbarTitle
+        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.searchController = searchController
         searchController.searchBar.delegate = self
         
@@ -85,7 +86,7 @@ class ViewController: UIViewController {
     private func setToolBarSelect() {
         let buttonPin: UIButton = {
             let button = UIButton(type: .system)
-            button.setTitle( "Pin", for: .normal)
+            button.setTitle( L10n.mainPinAction, for: .normal)
             button.setImage(UIImage(systemName: "pin.fill" )?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 17, weight: .light, scale: .medium)), for: .normal)
             return button
         }()
@@ -245,8 +246,8 @@ class ViewController: UIViewController {
             return
         }
 
-        let alert = UIAlertController(title: "Removing", message: "\(indexPaths.count) note(s) will be removerd. Are you sure?", preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: "Remove", style: .destructive, handler: { [weak self] _ in
+        let alert = UIAlertController(title: L10n.alertRemoveTitle, message: "\(indexPaths.count) " + L10n.alertRemoveText, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: L10n.alertRemoveAction, style: .destructive, handler: { [weak self] _ in
             guard let self = self else { return }
 
             let listOptId = indexPaths.map { index in self.notesModel[index]?.id }
@@ -254,7 +255,7 @@ class ViewController: UIViewController {
             
             let success = database.remove(listId: listId)
             if !success {
-                self.showAlert(title: "Error", text: "Unable to delete from database")
+                self.showAlert(title: L10n.mainError, text: L10n.mainErrorDeleteDb)
                 self.isSelectionMode = false
                 return
             }
@@ -268,7 +269,7 @@ class ViewController: UIViewController {
             
             self.isSelectionMode = false
         }))
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: L10n.mainCancelAction, style: .cancel, handler: nil))
         self.present(alert, animated: true)
         
     }
