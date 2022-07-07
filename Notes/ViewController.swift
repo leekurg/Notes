@@ -33,11 +33,11 @@ class ViewController: UIViewController {
         set {
             _IsSelectionMode = newValue
             if _IsSelectionMode {
-                animateCollectionTransition(toColor: UIColor(red: 1, green: 0.73, blue: 0.73, alpha: 0.3))
+                animateCollectionTransition(toColor: Asset.Main.collectionBGSelected.color)
                 setToolBarSelect()
             }
             else {
-                animateCollectionTransition(toColor: .white)
+                animateCollectionTransition(toColor: Asset.Main.collectionBGDefault.color)
                 setToolBarSearch()
             }
             animateSuperButtonTransition(forward: _IsSelectionMode)
@@ -52,7 +52,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        view.backgroundColor = .white
+        view.backgroundColor = Asset.Main.collectionBGDefault.color
         
         setupToolBar()
         setupCollectionView()
@@ -87,7 +87,7 @@ class ViewController: UIViewController {
         let buttonPin: UIButton = {
             let button = UIButton(type: .system)
             button.setTitle( L10n.mainPinAction, for: .normal)
-            button.setImage(UIImage(systemName: "pin.fill" )?.withConfiguration(UIImage.SymbolConfiguration(pointSize: 17, weight: .light, scale: .medium)), for: .normal)
+            button.setImage(createCFIcon(systemName: "pin.fill", color: .systemBlue, pointSize: 17, weigth: .light, scale: .medium), for: .normal)
             return button
         }()
         buttonPin.addTarget(self, action: #selector(pinDidTouched), for: .touchUpInside)
@@ -316,15 +316,14 @@ class ViewController: UIViewController {
     
     private func animateSuperButtonTransition( forward: Bool = true ) {
         if forward {
-            buttonSuper.setImage(UIImage(systemName: "trash.fill" )?.withTintColor(.white, renderingMode: .alwaysOriginal), for: .normal)
+            buttonSuper.setImage(createCFIcon(systemName: "trash.fill", color: Asset.Main.superButtonIcon.color), for: .normal)
         }
         else {
-            buttonSuper.setImage(
-                UIImage(systemName: "plus" )?.withTintColor(.white, renderingMode: .alwaysOriginal).withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .bold, scale: .large)), for: .normal)
+            buttonSuper.setImage( createCFIcon(systemName: "plus", color: Asset.Main.superButtonIcon.color, pointSize: 20, weigth: .bold, scale: .large), for: .normal)
         }
         
         UIView.transition(with: buttonSuper, duration: 0.5, options: .transitionCrossDissolve,
-                          animations: { [weak self] in self?.buttonSuper.backgroundColor = forward ? .red : #colorLiteral(red: 1, green: 0.4324872494, blue: 0, alpha: 0.480598096) },
+                          animations: { [weak self] in self?.buttonSuper.backgroundColor = forward ? Asset.Main.superButtonDelete.color : Asset.Main.superButtonNew.color},
                           completion: nil
         )
     }
@@ -374,12 +373,12 @@ extension ViewController: UICollectionViewDataSource {
         
         let header = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: NoteSection.reuseID, for: indexPath) as! NoteSection
         
-        header.titleLabel.text = notesModel.sections[indexPath.section].name.capitalized + " (\(notesModel.sections[indexPath.section].notes.count))"
+        header.titleLabel.text = notesModel.sections[indexPath.section].name.tr().capitalized + " (\(notesModel.sections[indexPath.section].notes.count))"
         return header
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-        if notesModel.sections[section].name == NoteCategory.pinned.rawValue {
+        if notesModel.sections[section].name == NoteCategory.pinned {
             return CGSize(width: view.frame.size.width, height: 0)
         }
         

@@ -69,14 +69,6 @@ class NoteEditViewController: UIViewController {
         }
         
         model.timestamp = Date()
-        //debug
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "dd.MM.yyyy HH:mm"
-//        let date = dateFormatter.date(from: "20.06.2021 11:10")
-//        if let date = date {
-//            model.timestamp = date
-//        }
-        //
         
         if let appDelegate = UIApplication.shared.delegate as? AppDelegate,
            let notificationManager = appDelegate.notificationManager {
@@ -137,11 +129,11 @@ class NoteEditViewController: UIViewController {
     
     func didButtonScheduleTouched() {
         if model.scheduled != nil && model.scheduled! > .now {
-            let alert = UIAlertController(title: "Unscheduling", message: "Note will be unscheduled. Are you sure?", preferredStyle: .actionSheet)
-            alert.addAction(UIAlertAction(title: "Unschedule", style: .destructive, handler: { [weak self] _ in
+            let alert = UIAlertController(title: L10n.alertScheduleTitle, message: L10n.alertScheduleText, preferredStyle: .actionSheet)
+            alert.addAction(UIAlertAction(title: L10n.alertScheduleAction, style: .destructive, handler: { [weak self] _ in
                 self?.didScheduled(date: nil)
             }))
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: L10n.mainCancelAction, style: .cancel, handler: nil))
             self.present(alert, animated: true)
             return
         }
@@ -162,7 +154,7 @@ class NoteEditViewController: UIViewController {
     }
     
     func didCategoryMenuItemPicked( category: NoteCategory ) {
-        model.category = category.rawValue
+        model.category = category
     }
     
     //MARK: - Request data

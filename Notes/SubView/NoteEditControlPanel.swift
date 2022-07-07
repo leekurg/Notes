@@ -20,12 +20,12 @@ final class NoteEditControlPanel: UIView {
     private var scheduled = false
     
     func configure(model: NoteDataModel) {
-        self.backgroundColor = UIColor(red: 0.3, green: 0.3, blue: 0.3, alpha: 0.4)
+        self.backgroundColor = Asset.Main.transGray.color
         
         buttonColor = {
             let button = UIButton()
             button.layer.borderWidth = 1
-            button.layer.borderColor = UIColor(white: 1, alpha: 0.5).cgColor
+            button.layer.borderColor = Asset.Main.transWhite.color.cgColor
             button.layer.cornerRadius = 15
             
             button.menu = createColorMenu()
@@ -38,7 +38,7 @@ final class NoteEditControlPanel: UIView {
         buttonPin = {
             let button = UIButton()
             button.layer.borderWidth = 1
-            button.layer.borderColor = UIColor(white: 1, alpha: 0.5).cgColor
+            button.layer.borderColor = Asset.Main.transWhite.color.cgColor
             button.layer.cornerRadius = 15
             button.addTarget(self, action: #selector(didButtonPinTouched), for: .touchUpInside)
             return button
@@ -48,15 +48,14 @@ final class NoteEditControlPanel: UIView {
         buttonCategory = {
             var config  = UIButton.Configuration.filled()
             
-            let smallImgConfig = UIImage.SymbolConfiguration(pointSize: 17, weight: .thin, scale: .small)
-            config.image = UIImage(systemName: "chevron.down" )?.withConfiguration(smallImgConfig).withTintColor( UIColor(white: 1, alpha: 0.7), renderingMode: .alwaysOriginal)
+            config.image = createCFIcon(systemName: "chevron.down", color: Asset.Main.transWhite.color, pointSize: 17, weigth: .thin, scale: .small)
             config.imagePlacement = .trailing
             config.imagePadding = 5
             config.background.backgroundColor = .clear
             
             let button = UIButton(configuration: config)
             button.layer.borderWidth = 1
-            button.layer.borderColor = UIColor(white: 1, alpha: 0.3).cgColor
+            button.layer.borderColor = Asset.Main.transWhite.color.cgColor
             button.layer.cornerRadius = 15
             
             button.menu = createCategoryMenu()
@@ -68,7 +67,7 @@ final class NoteEditControlPanel: UIView {
         buttonSchedule  = {
             let button = UIButton()
             button.layer.borderWidth = 1
-            button.layer.borderColor = UIColor(white: 1, alpha: 0.5).cgColor
+            button.layer.borderColor = Asset.Main.transWhite.color.cgColor
             button.layer.cornerRadius = 15
             button.addTarget(self, action: #selector(didButtonScheduleTouched), for: .touchUpInside)
             return button
@@ -77,11 +76,7 @@ final class NoteEditControlPanel: UIView {
         
         buttonClose = {
             let button = UIButton()
-            let largeConfig = UIImage.SymbolConfiguration(pointSize: 30, weight: .thin, scale: .large)
-            button.setImage(
-                UIImage(systemName: "xmark.circle" )?.withConfiguration(largeConfig)
-                    .withTintColor( UIColor(white: 1, alpha: 0.5), renderingMode: .alwaysOriginal)
-                    , for: .normal)
+            button.setImage( createCFIcon(systemName: "xmark.circle", color: Asset.Main.transWhite.color, pointSize: 30, weigth: .thin, scale: .large), for: .normal)
             button.layer.cornerRadius = 15
 
             button.addTarget(self, action: #selector(didCloseTouched), for: .touchUpInside)
@@ -136,9 +131,8 @@ final class NoteEditControlPanel: UIView {
         func createAction( title: String, colorName: NoteColors.Names) -> UIAction
         {
             let colorMark = NoteColors.getMarkColor(ename: colorName)
-            
             let act = UIAction(title: title,
-                               image: UIImage(systemName: "circle.fill" )?.withTintColor(colorMark, renderingMode: .alwaysOriginal)) { [weak self] _ in
+                               image: createCFIcon(systemName: "circle.fill", color: colorMark)) { [weak self] _ in
                 self?.didColorMenuItemPicked(color: colorName)
             }
             
@@ -147,10 +141,10 @@ final class NoteEditControlPanel: UIView {
         
         var actions: [UIAction] = []
         for color in NoteColors.Names.allCases {
-            actions.append( createAction(title: color.rawValue.capitalized, colorName: color))
+            actions.append( createAction(title: color.tr(), colorName: color))
         }
             
-        return UIMenu(title: "Colors", options: .displayInline, children: actions)
+        return UIMenu(title: L10n.menuColorsTitle, options: .displayInline, children: actions)
     }
     
     private func createCategoryMenu() -> UIMenu {
@@ -158,7 +152,7 @@ final class NoteEditControlPanel: UIView {
         func createAction( title: String, categoryName: NoteCategory) -> UIAction
         {
             let act = UIAction(title: title,
-                               image: UIImage(systemName: "folder.fill" )?.withTintColor(.orange, renderingMode: .alwaysOriginal)) { [weak self] _ in
+                               image: createCFIcon(systemName: "folder.fill", color: Asset.Main.categoryIcon.color)) { [weak self] _ in
                 self?.didCategoryMenuItemPicked(category: categoryName)
             }
             return act
@@ -167,10 +161,10 @@ final class NoteEditControlPanel: UIView {
         var actions: [UIAction] = []
         for category in NoteCategory.allCases {
             if category == .pinned { continue }
-            actions.append( createAction(title: category.rawValue.capitalized, categoryName: category))
+            actions.append( createAction(title: category.tr().capitalized, categoryName: category))
         }
             
-        return UIMenu(title: "Categories", options: .displayInline, children: actions)
+        return UIMenu(title: L10n.menuCategoriesTitle, options: .displayInline, children: actions)
     }
     
     //MARK: - Action
@@ -181,19 +175,19 @@ final class NoteEditControlPanel: UIView {
     
     private func didCategoryMenuItemPicked( category: NoteCategory ) {
         delegate?.didCategoryMenuItemPicked(category: category)
-        setCategory(category: category.rawValue)
+        setCategory(category: category)
     }
     
     private func setColorMark( color: NoteColors.Names ) {
         let colorMark = NoteColors.getMarkColor(ename: color)
-        buttonColor.setImage(UIImage(systemName: "circle.fill" )?.withTintColor(colorMark, renderingMode: .alwaysOriginal), for: .normal)
+        buttonColor.setImage(createCFIcon(systemName: "circle.fill", color: colorMark), for: .normal)
     }
     
     private func setPinnedMark(pinned: Bool) {
         self.pinned = pinned
         UIView.transition(with: buttonPin, duration: 0.5, options: .transitionCrossDissolve,
                           animations: { [weak self] in
-                            self?.buttonPin.setImage(UIImage(systemName: pinned ? "pin.fill" : "pin" )?.withTintColor(UIColor(white: 1, alpha: 0.7), renderingMode: .alwaysOriginal), for: .normal) },
+            self?.buttonPin.setImage(createCFIcon(systemName: pinned ? "pin.fill" : "pin", color: Asset.Main.transWhiteAcsent.color), for: .normal) },
                           completion: nil
         )
     }
@@ -202,13 +196,13 @@ final class NoteEditControlPanel: UIView {
         self.scheduled = scheduled
         UIView.transition(with: buttonSchedule, duration: 0.5, options: .transitionCrossDissolve,
                           animations: { [weak self] in
-                            self?.buttonSchedule.setImage(UIImage(systemName: scheduled ? "bell.fill" : "bell" )?.withTintColor(UIColor(white: 1, alpha: 0.7), renderingMode: .alwaysOriginal), for: .normal) },
+                            self?.buttonSchedule.setImage(createCFIcon(systemName: scheduled ? "bell.fill" : "bell", color: Asset.Main.transWhiteAcsent.color), for: .normal) },
                           completion: nil
         )
     }
     
-    private func setCategory(category: String?) {
-        buttonCategory.setTitle(category?.uppercased(), for: .normal)
+    private func setCategory(category: NoteCategory?) {
+        buttonCategory.setTitle(category?.tr().uppercased(), for: .normal)
     }
 
     @objc private func didCloseTouched() {

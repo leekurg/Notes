@@ -11,15 +11,20 @@ _
 Swift/UIKit app for creating notes
 
 #### Features: ####
-  - Create and store notes in local database
+  - Create and store notes and choose category
   - Edit and delete notes
+  - Search for text in notes
   - Choose note color and category 
   - Pin note to top
+  - Schedule note, push motification will shown
 
 #### Technology stack: ####
   - Swift/UIKit
   - Architecture MVC
   - Realm Swift database
+  - SwiftGen resources
+  - IQKeyboardManager for editing
+  - SnapKit for layout constraints
   - Dependencies with CocoaPods
 
 ### Installation ####

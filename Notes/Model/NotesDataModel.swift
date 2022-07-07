@@ -42,11 +42,11 @@ struct NotesDataModel {
         
         //pinned
         if note.pinned == true {
-            if let index = getIndexForSectionName(section: NoteCategory.pinned.rawValue) {
+            if let index = getIndexForSectionName(section: NoteCategory.pinned) {
                 sections[index].notes.append(note)
             }
             else {
-                sections.insert(SectionDataModel(name: NoteCategory.pinned.rawValue, notes: [note]), at: 0)
+                sections.insert(SectionDataModel(name: NoteCategory.pinned, notes: [note]), at: 0)
             }
             return
         }
@@ -56,7 +56,7 @@ struct NotesDataModel {
             sections[index].notes.append(note)
         }
         else {
-            sections.append( SectionDataModel(name: note.category ?? NoteCategory.other.rawValue, notes: [note]))
+            sections.append( SectionDataModel(name: note.category ?? NoteCategory.other, notes: [note]))
         }
     }
 
@@ -78,16 +78,16 @@ struct NotesDataModel {
     
     func getNoteIndexPath(id: Int) -> IndexPath? {
         for (nsection, section) in sections.enumerated() {
-            for (row,note) in section.notes.enumerated() {
+            for (nrow,note) in section.notes.enumerated() {
                 if note.id == id {
-                    return IndexPath(row: row, section: nsection)
+                    return IndexPath(row: nrow, section: nsection)
                 }
             }
         }
         return nil
     }
     
-    private func getIndexForSectionName( section: String? ) -> Int? {
+    private func getIndexForSectionName( section: NoteCategory? ) -> Int? {
         guard let section = section else {
             return nil
         }
@@ -102,7 +102,7 @@ struct NotesDataModel {
 }
 
 struct SectionDataModel {
-    var name: String = ""
+    var name: NoteCategory = .other
     var notes: [NoteDataModel] = []
 }
 
@@ -113,7 +113,7 @@ struct NoteDataModel: Equatable {
     var title: String?
     var description: String?
     var color: String?
-    var category: String?
+    var category: NoteCategory?
     var pinned: Bool
 }
 
@@ -125,7 +125,7 @@ extension NoteDataModel {
         title = object.title
         description = object.desc
         color = object.color
-        category = object.category
+        category = NoteCategory(rawValue: object.category)
         pinned = object.pinned
     }
     
@@ -133,7 +133,7 @@ extension NoteDataModel {
         self.id = id
         timestamp = Date()
         color = NoteColors.Names.base.rawValue
-        category = NoteCategory.other.rawValue
+        category = NoteCategory.other
         pinned = false
     }
 }

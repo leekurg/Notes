@@ -9,21 +9,33 @@ import UIKit
 
 struct NoteColors {
     enum Names: String, CaseIterable {
-        case base = "default"
-        case blue = "blue"
-        case pink = "pink"
-        case cream = "cream"
-        case green = "green"
+        case base   = "default"
+        case blue   = "blue"
+        case pink   = "pink"
+        case cream  = "cream"
+        case green  = "green"
         case purple = "purple"
+    
+        func tr() -> String {
+            switch(self) {
+            case .base:     return L10n.colorNameBase
+            case .blue:     return L10n.colorNameBlue
+            case .pink:     return L10n.colorNamePink
+            case .cream:    return L10n.colorNameCream
+            case .green:    return L10n.colorNameGreen
+            case .purple:   return L10n.colorNamePurple
+            }
+        }
     }
     
+    
     static let colors: Dictionary<String, UIColor> = [
-        Names.base.rawValue     : UIColor(red: 240/255, green: 240/255, blue: 240/255, alpha: 1),
-        Names.blue.rawValue     : UIColor(red: 224/255, green: 236/255, blue: 255/255, alpha: 1),
-        Names.pink.rawValue     : UIColor(red: 255/255, green: 200/255, blue: 200/255, alpha: 1),
-        Names.cream.rawValue    : UIColor(red: 240/255, green: 227/255, blue: 209/255, alpha: 1),
-        Names.green.rawValue    : UIColor(red: 233/255, green: 245/255, blue: 223/255, alpha: 1),
-        Names.purple.rawValue   : UIColor(red: 240/255, green: 225/255, blue: 245/255, alpha: 1)
+        Names.base.rawValue     : Asset.NoteBackground.base.color,
+        Names.blue.rawValue     : Asset.NoteBackground.blue.color,
+        Names.pink.rawValue     : Asset.NoteBackground.pink.color,
+        Names.cream.rawValue    : Asset.NoteBackground.cream.color,
+        Names.green.rawValue    : Asset.NoteBackground.green.color,
+        Names.purple.rawValue   : Asset.NoteBackground.purple.color
     ]
     
     static func getColorForName ( name: String? ) -> Names {
@@ -45,12 +57,12 @@ struct NoteColors {
     
     static func getMarkColor( ename: Names ) -> UIColor {
         switch(ename) {
-        case .blue:     return UIColor.blue
-        case .pink:     return UIColor(red: 255/255, green: 150/255, blue: 150/255, alpha: 1)
-        case .cream:    return UIColor(red: 230/255, green: 213/255, blue: 161/255, alpha: 1)
-        case .green:    return UIColor(red: 0, green: 0.8, blue: 0, alpha: 1)
-        case .purple:   return UIColor.purple
-        default:        return UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 1)
+        case .blue:     return Asset.NoteMark.blue.color
+        case .pink:     return Asset.NoteMark.pink.color
+        case .cream:    return Asset.NoteMark.cream.color
+        case .green:    return Asset.NoteMark.green.color
+        case .purple:   return Asset.NoteMark.purple.color
+        default:        return Asset.NoteMark.base.color
         }
     }
     
@@ -59,12 +71,12 @@ struct NoteColors {
     }
     static func getBlurColor( ename: Names ) -> UIColor {
         switch(ename) {
-        case .blue:     return UIColor(red: 0, green: 0, blue: 1, alpha: 0.05)
-        case .pink:     return UIColor(red: 1, green: 0, blue: 0, alpha: 0.05)
-        case .cream:    return UIColor(red: 1, green: 150/255, blue: 0, alpha: 0.05)
-        case .green:    return UIColor(red: 0, green: 0.5, blue: 0, alpha: 0.05)
-        case .purple:   return UIColor(red: 1, green: 0, blue: 1, alpha: 0.05)
-        default:    return UIColor(red: 0, green: 0, blue: 0, alpha: 0)
+        case .blue:     return Asset.NoteBlur.blue.color
+        case .pink:     return Asset.NoteBlur.pink.color
+        case .cream:    return Asset.NoteBlur.cream.color
+        case .green:    return Asset.NoteBlur.green.color
+        case .purple:   return Asset.NoteBlur.purple.color
+        default:        return Asset.NoteBlur.base.color
         }
     }
 }

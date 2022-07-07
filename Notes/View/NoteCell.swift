@@ -55,7 +55,7 @@ class NoteCell: UICollectionViewCell {
         
         pinMark = {
             let view = UIImageView()
-            view.image = UIImage(systemName: "pin.fill")?.withTintColor( UIColor(white: 0, alpha: 0.3), renderingMode: .alwaysOriginal).withConfiguration(UIImage.SymbolConfiguration(pointSize: 20, weight: .thin, scale: .small))
+            view.image = createCFIcon(systemName: "pin.fill", color: Asset.Main.transGray.color, pointSize: 20, weigth: .thin, scale: .small)
             view.alpha = 0
             return view
         }()
@@ -116,12 +116,6 @@ class NoteCell: UICollectionViewCell {
         self.backgroundColor = NoteColors.getColor(ename: .base)
         self.pinMark.alpha = 0
         self.setSelected(selected: false)
-    }
-
-    func setBackgroundColor( color: CGColor? ) {
-        guard let color = color else { return }
-        
-        backgroundColor = UIColor(cgColor: color)
     }
     
     func setTitleHidden() {

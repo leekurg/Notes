@@ -63,11 +63,11 @@ strings:
     - templateName: structured-swift5
       output: ./Localization/L10n.swift
 
-#xcassets:
-#   inputs:
-#     - ./Assets/Colors.xcassets
-#   outputs:
-#     - templateName: swift5
-#       params:
-#         forceProvidesNamespaces: true
-#       output: ./Assets/Colors.swift
+xcassets:
+   inputs:
+     - ./Colors/NoteColors.xcassets
+   outputs:
+     - templateName: swift5
+       params:
+         forceProvidesNamespaces: true
+       output: ./Colors/NoteColorsGen.swift

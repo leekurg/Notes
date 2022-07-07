@@ -24,9 +24,12 @@
 		1E3987952870A1F700409A75 /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3987942870A1F600409A75 /* NotificationManager.swift */; };
 		1E3987972870CB3700409A75 /* DatePickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E3987962870CB3700409A75 /* DatePickerViewController.swift */; };
 		1E83114828719CFB007E402A /* ScheduleLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E83114728719CFB007E402A /* ScheduleLabel.swift */; };
+		1E8598C62876C3B600263C5C /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E8598C52876C3B600263C5C /* General.swift */; };
 		1E9E2B3E28758DA300678C83 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 1E9E2B4028758DA300678C83 /* Localizable.strings */; };
 		1E9E2B4328758E1A00678C83 /* swiftgen.yml in Resources */ = {isa = PBXBuildFile; fileRef = 1E9E2B4228758E1A00678C83 /* swiftgen.yml */; };
 		1E9E2B4628758FDA00678C83 /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9E2B4528758FDA00678C83 /* L10n.swift */; };
+		1E9E2B492875C01C00678C83 /* NoteColors.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1E9E2B482875C01C00678C83 /* NoteColors.xcassets */; };
+		1E9E2B4D2875C61E00678C83 /* NoteColorsGen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E9E2B4C2875C61E00678C83 /* NoteColorsGen.swift */; };
 		C619C79E285FC9A3001803D7 /* Orientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C619C79D285FC9A3001803D7 /* Orientation.swift */; };
 		C66E3B5E2861F0B9009C75E5 /* NoContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C66E3B5D2861F0B9009C75E5 /* NoContentView.swift */; };
 		C66E3B602861F454009C75E5 /* SuperButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = C66E3B5F2861F454009C75E5 /* SuperButton.swift */; };
@@ -56,12 +59,15 @@
 		1E3987942870A1F600409A75 /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		1E3987962870CB3700409A75 /* DatePickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerViewController.swift; sourceTree = "<group>"; };
 		1E83114728719CFB007E402A /* ScheduleLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleLabel.swift; sourceTree = "<group>"; };
+		1E8598C52876C3B600263C5C /* General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = General.swift; sourceTree = "<group>"; };
 		1E9E2B3A28758C9C00678C83 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		1E9E2B3B28758C9C00678C83 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		1E9E2B3F28758DA300678C83 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1E9E2B4128758DA900678C83 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		1E9E2B4228758E1A00678C83 /* swiftgen.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = swiftgen.yml; sourceTree = "<group>"; };
 		1E9E2B4528758FDA00678C83 /* L10n.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = L10n.swift; sourceTree = "<group>"; };
+		1E9E2B482875C01C00678C83 /* NoteColors.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = NoteColors.xcassets; sourceTree = "<group>"; };
+		1E9E2B4C2875C61E00678C83 /* NoteColorsGen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NoteColorsGen.swift; sourceTree = "<group>"; };
 		227079B97D73C8CF7250A79B /* Pods-Notes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Notes.release.xcconfig"; path = "Target Support Files/Pods-Notes/Pods-Notes.release.xcconfig"; sourceTree = "<group>"; };
 		3EF4187404B262E72A1E1166 /* Pods-Notes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Notes.debug.xcconfig"; path = "Target Support Files/Pods-Notes/Pods-Notes.debug.xcconfig"; sourceTree = "<group>"; };
 		C619C79D285FC9A3001803D7 /* Orientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Orientation.swift; sourceTree = "<group>"; };
@@ -124,6 +130,7 @@
 				1E3987942870A1F600409A75 /* NotificationManager.swift */,
 				090F42B82853BF050098C7FD /* NoteColors.swift */,
 				091FEA492857455E00808247 /* NoteCategory.swift */,
+				1E8598C52876C3B600263C5C /* General.swift */,
 				1E9E2B3828758C5D00678C83 /* Resources */,
 				096F7A7A284CD6E9004C9983 /* Main.storyboard */,
 				096F7A7D284CD6EA004C9983 /* Assets.xcassets */,
@@ -157,6 +164,7 @@
 		1E9E2B3828758C5D00678C83 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				1E9E2B472875BFD400678C83 /* Colors */,
 				1E9E2B4228758E1A00678C83 /* swiftgen.yml */,
 				1E9E2B3928758C6600678C83 /* Localization */,
 			);
@@ -170,6 +178,15 @@
 				1E9E2B4028758DA300678C83 /* Localizable.strings */,
 			);
 			path = Localization;
+			sourceTree = "<group>";
+		};
+		1E9E2B472875BFD400678C83 /* Colors */ = {
+			isa = PBXGroup;
+			children = (
+				1E9E2B4C2875C61E00678C83 /* NoteColorsGen.swift */,
+				1E9E2B482875C01C00678C83 /* NoteColors.xcassets */,
+			);
+			path = Colors;
 			sourceTree = "<group>";
 		};
 		3AF924B0E01AB0161DF3E3A4 /* Frameworks */ = {
@@ -270,6 +287,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				096F7A81284CD6EA004C9983 /* LaunchScreen.storyboard in Resources */,
+				1E9E2B492875C01C00678C83 /* NoteColors.xcassets in Resources */,
 				1E9E2B4328758E1A00678C83 /* swiftgen.yml in Resources */,
 				1E9E2B3E28758DA300678C83 /* Localizable.strings in Resources */,
 				096F7A7E284CD6EA004C9983 /* Assets.xcassets in Resources */,
@@ -356,12 +374,14 @@
 				096F7A8C284CD9AC004C9983 /* NoteCell.swift in Sources */,
 				1E83114828719CFB007E402A /* ScheduleLabel.swift in Sources */,
 				091FEA482856A38F00808247 /* NoteSection.swift in Sources */,
+				1E8598C62876C3B600263C5C /* General.swift in Sources */,
 				0934CE2E284FDD1D003AC617 /* Database.swift in Sources */,
 				0934CE2C284FD890003AC617 /* NoteDataObject.swift in Sources */,
 				1E3987952870A1F700409A75 /* NotificationManager.swift in Sources */,
 				C6FACF4D286072A0001AB18F /* NoteEditControlPanel.swift in Sources */,
 				C619C79E285FC9A3001803D7 /* Orientation.swift in Sources */,
 				091FEA4A2857455E00808247 /* NoteCategory.swift in Sources */,
+				1E9E2B4D2875C61E00678C83 /* NoteColorsGen.swift in Sources */,
 				096F7A77284CD6E9004C9983 /* SceneDelegate.swift in Sources */,
 				090F42B92853BF050098C7FD /* NoteColors.swift in Sources */,
 			);

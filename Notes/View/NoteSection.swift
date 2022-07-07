@@ -15,7 +15,7 @@ class NoteSection: UICollectionReusableView {
         titleLabel = {
             let label = UILabel()
             label.textAlignment = .center
-            label.textColor = .lightGray
+            label.textColor = Asset.Main.lightGray.color
             return label
         }()
         super.init(frame: frame)
@@ -30,7 +30,7 @@ class NoteSection: UICollectionReusableView {
         let _: UIView = {
             let separator = UIView()
             separator.layer.borderWidth = 1
-            separator.layer.borderColor = UIColor(white: 0.3, alpha: 0.1).cgColor
+            separator.layer.borderColor = Asset.Main.noteSectionSeparator.color.cgColor
             
             addSubview(separator)
             

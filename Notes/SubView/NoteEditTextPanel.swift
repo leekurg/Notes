@@ -32,10 +32,10 @@ final class NoteEditTextPanel: UIView {
 
             titlePlaceholder = {
                 let label = UILabel()
-                label.text = "Enter title..."
+                label.text = L10n.textviewPlaceholderTitle
                 label.font = .italicSystemFont(ofSize: (view.font?.pointSize)!)
                 view.addSubview(label)
-                label.textColor = .gray
+                label.textColor = Asset.Main.lightGray.color
                 label.isHidden = !view.text.isEmpty
                 
                 label.snp.makeConstraints { make in
@@ -58,10 +58,10 @@ final class NoteEditTextPanel: UIView {
             
             descPlaceholder = {
                 let label = UILabel()
-                label.text = "Enter text..."
+                label.text = L10n.textviewPlaceholderText
                 label.font = .italicSystemFont(ofSize: (view.font?.pointSize)!)
                 view.addSubview(label)
-                label.textColor = .gray
+                label.textColor = Asset.Main.lightGray.color
                 label.isHidden = !view.text.isEmpty
                 
                 label.snp.makeConstraints { make in
@@ -75,7 +75,7 @@ final class NoteEditTextPanel: UIView {
             let _: UIView = {
                 let separator = UIView()
                 separator.layer.borderWidth = 1
-                separator.layer.borderColor = UIColor(white: 0.3, alpha: 0.2).cgColor
+                separator.layer.borderColor = Asset.Main.noteSectionSeparator.color.cgColor
                 
                 view.addSubview(separator)
                 

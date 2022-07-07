@@ -12,8 +12,41 @@
 "main_cancel_action" = "Cancel";
 "main_pin_action" = "Pin";
 
-//alert
+//categories
+"note_category_pinned" = "Pinned";
+"note_category_other" = "Other";
+"note_category_personal" = "Personal";
+"note_category_work" = "Work";
+
+//alerts
 "alert_remove_title" = "Removing";
 "alert_remove_text" = "note(s) will be removerd. Are you sure?";
 "alert_remove_action" = "Remove";
 
+"alert_schedule_title" = "Unscheduling";
+"alert_schedule_text" = "Note will be unscheduled. Are you sure?";
+"alert_schedule_action" = "Unschedule";
+
+//menu
+"menu_colors_title" = "Colors";
+"menu_categories_title" = "Categories";
+
+//placeholders
+"textview_placeholder_title" = "Enter title...";
+"textview_placeholder_text" = "Enter text...";
+
+//date
+"date_string_today" = "today";
+"date_string_tomorrow" = "tomorrow";
+
+//colors
+"color_name_base" = "Default";
+"color_name_blue" = "Blue";
+"color_name_pink" = "Pink";
+"color_name_cream" = "Cream";
+"color_name_green" = "Green";
+"color_name_purple" = "Purple";
+
+"schedule_button_title" = "Schedule";
+"no_content_title" = "No content";
+"no_content_text" = "No content is matching your request";

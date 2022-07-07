@@ -46,14 +46,14 @@ class DatePickerViewController: UIViewController {
         
         buttonAccept = {
             let button = UIButton(configuration: .filled())
-            button.setTitle("Schedule", for: .normal)
+            button.setTitle(L10n.scheduleButtonTitle, for: .normal)
             button.addTarget(self, action: #selector(didButtonAcceptTouched), for: .touchUpInside)
             return button
         }()
         
         buttonCancel = {
             let button = UIButton(configuration: .gray())
-            button.setTitle("Cancel", for: .normal)
+            button.setTitle(L10n.mainCancelAction, for: .normal)
             button.addTarget(self, action: #selector(close), for: .touchUpInside)
             return button
         }()

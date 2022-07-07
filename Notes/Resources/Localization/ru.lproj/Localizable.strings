@@ -12,7 +12,41 @@
 "main_cancel_action" = "Отменить";
 "main_pin_action" = "Закрепить";
 
-//alert
+//categories
+"note_category_pinned" = "Закреплено";
+"note_category_other" = "Другое";
+"note_category_personal" = "Личное";
+"note_category_work" = "Рабочее";
+
+//alerts
 "alert_remove_title" = "Удаление";
 "alert_remove_text" = "заметка(ки) будут удалены. Вы уверены?";
 "alert_remove_action" = "Удалить";
+
+"alert_schedule_title" = "Отключение напоминания";
+"alert_schedule_text" = "Напоминание для этой заметки будет отключено. Вы уверены?";
+"alert_schedule_action" = "Отключить";
+
+//menu
+"menu_colors_title" = "Цвета";
+"menu_categories_title" = "Категории";
+
+//placeholders
+"textview_placeholder_title" = "Введите заголовок...";
+"textview_placeholder_text" = "Введите текст...";
+
+//date
+"date_string_today" = "сегодня в";
+"date_string_tomorrow" = "завтра в";
+
+//colors
+"color_name_base" = "По-умолчанию";
+"color_name_blue" = "Синий";
+"color_name_pink" = "Розовый";
+"color_name_cream" = "Кремовый";
+"color_name_green" = "Зеленый";
+"color_name_purple" = "Фиолетовый";
+
+"schedule_button_title" = "Установить напоминание";
+"no_content_title" = "Нет контента";
+"no_content_text" = "Нет контента по вашему запросу";

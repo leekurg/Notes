@@ -8,17 +8,17 @@
 //import Foundation
 
 enum NoteCategory: String, CaseIterable {
-case pinned = "pinned"
-case other = "other"
-case pesonal = "personal"
-case work = "work"
+case pinned     = "pinned"
+case other      = "other"
+case pesonal    = "personal"
+case work       = "work"
     
     func tr() -> String{
         switch(self) {
-        case .pinned:   return "Pinned"
-        case .other:    return "Other"
-        case .pesonal:  return "Personal"
-        case .work:     return "Work"
+        case .pinned:   return L10n.noteCategoryPinned
+        case .other:    return L10n.noteCategoryOther
+        case .pesonal:  return L10n.noteCategoryPersonal
+        case .work:     return L10n.noteCategoryWork
         }
     }
 }

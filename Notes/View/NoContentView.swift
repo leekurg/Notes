@@ -11,13 +11,13 @@ class NoContentView: UIView {
     
     func configure() {
         let labelTitle = UILabel()
-        labelTitle.text = "No content"
-        labelTitle.textColor = .lightGray
+        labelTitle.text = L10n.noContentTitle
+        labelTitle.textColor = Asset.Main.transGray.color
         labelTitle.font = UIFont.systemFont(ofSize: 25, weight: .bold)
         
         let labelDesc = UILabel()
-        labelDesc.text = "No content is matching your request"
-        labelDesc.textColor = .lightGray
+        labelDesc.text = L10n.noContentText
+        labelDesc.textColor = Asset.Main.transGray.color
         
         addSubview(labelTitle)
         addSubview(labelDesc)

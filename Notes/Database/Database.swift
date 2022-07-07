@@ -20,6 +20,15 @@ class Database {
         }
     }
     
+    func assign(object: NoteDataObject, model: NoteDataModel) {
+        object.timestamp = model.timestamp
+        object.scheduled = model.scheduled
+        object.title = model.title ?? ""
+        object.desc = model.description ?? ""
+        object.color = model.color ?? ""
+        object.category = model.category?.rawValue ?? ""
+        object.pinned = model.pinned
+    }
     
     func write(_ model: NoteDataModel?) {
         guard let model = model else {return}
@@ -27,31 +36,19 @@ class Database {
             
             let object = NoteDataObject()
             object.id = model.id
-            object.timestamp = model.timestamp
-            object.scheduled = model.scheduled
-            object.title = model.title ?? ""
-            object.desc = model.description ?? ""
-            object.color = model.color ?? ""
-            object.category = model.category ?? ""
-            object.pinned = model.pinned
-                
+            assign(object: object, model: model)
+            
             realm.add(object)
         })
     }
-    
+    //TODO вынести write в отдельную функцию
     func update(_ model: NoteDataModel?) {
         guard let model = model else {return}
         
         if let object = realm.objects( NoteDataObject.self ).filter("id == %@", model.id).first {
 
             try! realm.write({
-                object.timestamp = model.timestamp
-                object.scheduled = model.scheduled
-                object.title = model.title ?? ""
-                object.desc = model.description ?? ""
-                object.color = model.color ?? ""
-                object.category = model.category ?? ""
-                object.pinned = model.pinned
+                assign(object: object, model: model)
             })
         }
     }

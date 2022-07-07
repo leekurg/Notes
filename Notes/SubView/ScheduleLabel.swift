@@ -30,14 +30,14 @@ class ScheduleLabel: UIView {
     func configure() {
         scheduleMark = {
             let view = UIImageView()
-            view.image = UIImage(systemName: "bell.fill")?.withTintColor( UIColor(white: 0, alpha: 0.3), renderingMode: .alwaysOriginal).withConfiguration(UIImage.SymbolConfiguration(pointSize: 12, weight: .thin, scale: .small))
+            view.image = createCFIcon(systemName: "bell.fill", color: Asset.Main.transGray.color, pointSize: 12, weigth: .thin, scale: .small)
             view.alpha = 0
             return view
         }()
         
         dateLabel = {
             let label = UILabel()
-            label.textColor = UIColor(white: 0, alpha: 0.7)
+            label.textColor = Asset.Main.transGrayAcsent.color
             label.font = UIFont.systemFont(ofSize: 12, weight: .thin)
             label.textAlignment = .center
             return label
@@ -67,11 +67,11 @@ class ScheduleLabel: UIView {
         
         let calendar = Calendar.current
         if calendar.isDateInToday(date) {
-            prefix = "today "
+            prefix = L10n.dateStringToday + " "
             format = "HH:mm"
         }
         else if calendar.isDateInTomorrow(date) {
-            prefix = "tomorrow "
+            prefix = L10n.dateStringTomorrow + " "
             format = "HH:mm"
         }
         //in week ahead
