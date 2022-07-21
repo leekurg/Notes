@@ -1,12 +1,13 @@
 # Notes #
 
-    <p align="center">
+<p align="center">
     <img src="https://user-images.githubusercontent.com/105886145/180154841-a74271e8-738d-434a-a79b-e6d49296fdab.gif" width="300">
-    </p>
-    <p align="center">
+</p>
+
+<p align="center">
     <img src="https://user-images.githubusercontent.com/105886145/180155100-e1b0153d-f0b5-417c-b655-e8bfeb72326b.png" width="300">
     <img src="https://user-images.githubusercontent.com/105886145/180155169-80fbf8dd-9c91-4105-b950-73283644c9b7.png" width="300">
-    </p>
+</p>
     
 ### About ###
 Swift/UIKit app for creating notes
