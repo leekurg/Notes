@@ -12,13 +12,23 @@ final class NoteEditTextPanel: UIView {
     
     private var titleTextView: UITextView!
     private var descTextView: UITextView!
+    private var imgView: UIImageView!
     private var titlePlaceholder: UILabel?
     private var descPlaceholder: UILabel?
+    
+    private var attachment: String?
     
     var title: String?
     var desc: String?
     
     func configure(model: NoteDataModel) {
+//        imgView = {
+//            let img = model.image == nil ? nil : UIImage(named: "twinlake")
+//
+//            let view = UIImageView(image: img)
+//            return view
+//        }()
+        
         titleTextView = {
             let view = UITextView()
             view.delegate = self
@@ -89,17 +99,33 @@ final class NoteEditTextPanel: UIView {
                 return separator
             }()
             
+//            let attachment = NSTextAttachment()
+//            attachment.image = UIImage(named: "twinlake")
+//            let imageString = NSAttributedString(attachment: attachment)
+//            view.textStorage.insert(imageString, at: 0)
+            
             return view
         }()
         
+//        self.addSubview(imgView)
         self.addSubview(titleTextView)
         self.addSubview(descTextView)
         
+//        imgView.snp.makeConstraints { make in
+//            make.top.equalToSuperview()
+//            make.leading.trailing.equalToSuperview()
+//
+//            if model.image?.isEmpty == true {
+//                make.height.equalTo(0)
+//            }
+//        }
+
         titleTextView.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
+            make.top.equalToSuperview()
+            make.leading.trailing.equalToSuperview()
             make.height.equalTo(70)
         }
-
+        
         descTextView.snp.makeConstraints { make in
             make.bottom.leading.trailing.equalToSuperview()
             make.top.equalTo(titleTextView.snp.bottom)
@@ -114,6 +140,24 @@ final class NoteEditTextPanel: UIView {
             (desc == nil || desc!.isEmpty) {
             titleTextView.becomeFirstResponder()
         }
+    }
+    
+    func setNewAttachment(path: String?) {
+//        if let path = path {
+//            print("set file: ", path)
+//            imgView.image = UIImage(contentsOfFile: path)
+//            imgView.snp.removeConstraints()
+//            imgView.snp.remakeConstraints { make in
+//                make.top.leading.trailing.equalToSuperview()
+//            }
+//        }
+//        else
+//        {
+//            imgView.image = nil
+//            imgView.snp.remakeConstraints { make in
+//                make.height.equalTo(0)
+//            }
+//        }
     }
 }
 

@@ -114,6 +114,7 @@ struct NoteDataModel: Equatable {
     var description: String?
     var color: String?
     var category: NoteCategory?
+    var image: String?
     var pinned: Bool
 }
 
@@ -126,6 +127,7 @@ extension NoteDataModel {
         description = object.desc
         color = object.color
         category = NoteCategory(rawValue: object.category)
+        image = object.image
         pinned = object.pinned
     }
     

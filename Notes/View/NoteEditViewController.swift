@@ -13,11 +13,12 @@ class NoteEditViewController: UIViewController {
     private var controlPanel: NoteEditControlPanel!
     private var textPanel: NoteEditTextPanel!
     private var backView: UIView!
+    private var imagePickerViewController: UIImagePickerController?
     
     private var model: NoteDataModel!
     private var oldModel : NoteDataModel!
     private var isNew = false
-    
+
     var informParentWhenDone: (() -> Void)?
     
     init( model _model: NoteDataModel? = nil ) {
@@ -127,6 +128,16 @@ class NoteEditViewController: UIViewController {
         model.pinned = !model.pinned
     }
     
+    func didButtonAddTouched() {
+        imagePickerViewController = UIImagePickerController()
+        imagePickerViewController!.delegate = self
+        imagePickerViewController!.mediaTypes = ["public.image"]
+        imagePickerViewController!.sourceType = .savedPhotosAlbum
+        imagePickerViewController!.allowsEditing = false
+        
+        present(imagePickerViewController!, animated: true)
+    }
+    
     func didButtonScheduleTouched() {
         if model.scheduled != nil && model.scheduled! > .now {
             let alert = UIAlertController(title: L10n.alertScheduleTitle, message: L10n.alertScheduleText, preferredStyle: .actionSheet)
@@ -160,5 +171,17 @@ class NoteEditViewController: UIViewController {
     //MARK: - Request data
     func getNoteId() -> Int {
         return model.id
+    }
+}
+
+extension NoteEditViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController,
+                               didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        if let url = info[.imageURL] as? URL {
+            model.image = url.absoluteString
+            textPanel.setNewAttachment(path: model.image)
+        }
+        imagePickerViewController?.dismiss(animated: true)
+        imagePickerViewController = nil
     }
 }

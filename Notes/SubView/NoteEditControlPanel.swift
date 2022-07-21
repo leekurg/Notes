@@ -12,6 +12,7 @@ final class NoteEditControlPanel: UIView {
     
     private var buttonColor: UIButton!
     private var buttonPin: UIButton!
+//    private var buttonAdd: UIButton!
     private var buttonCategory: UIButton!
     private var buttonSchedule: UIButton!
     private var buttonClose: UIButton!
@@ -44,6 +45,16 @@ final class NoteEditControlPanel: UIView {
             return button
         }()
         setPinnedMark(pinned: false)
+        
+//        buttonAdd = {
+//            let button = UIButton()
+//            button.layer.borderWidth = 1
+//            button.layer.borderColor = Asset.Main.transWhite.color.cgColor
+//            button.setImage( createCFIcon(systemName: "plus", color: Asset.Main.transWhite.color), for: .normal)
+//            button.layer.cornerRadius = 15
+//            button.addTarget(self, action: #selector(didButtonAddTouched), for: .touchUpInside)
+//            return button
+//        }()
         
         buttonCategory = {
             var config  = UIButton.Configuration.filled()
@@ -86,6 +97,7 @@ final class NoteEditControlPanel: UIView {
         
         self.addSubview(buttonColor)
         self.addSubview(buttonPin)
+//        self.addSubview(buttonAdd)
         self.addSubview(buttonCategory)
         self.addSubview(buttonSchedule)
         self.addSubview(buttonClose)
@@ -101,6 +113,12 @@ final class NoteEditControlPanel: UIView {
             make.leading.equalTo(buttonColor.snp.trailing).offset(10)
             make.width.height.equalTo(30)
         }
+        
+//        buttonAdd.snp.makeConstraints { make in
+//            make.centerY.equalToSuperview()
+//            make.leading.equalTo(buttonPin.snp.trailing).offset(10)
+//            make.width.height.equalTo(30)
+//        }
         
         buttonCategory.snp.makeConstraints { make in
             make.center.equalToSuperview()
@@ -212,6 +230,11 @@ final class NoteEditControlPanel: UIView {
     @objc private func didButtonPinTouched() {
         delegate?.didButtonPinTouched()
         setPinnedMark(pinned: !pinned)
+    }
+    
+    @objc private func didButtonAddTouched() {
+        print(#function)
+        delegate?.didButtonAddTouched()
     }
     
     @objc private func didButtonScheduleTouched() {
